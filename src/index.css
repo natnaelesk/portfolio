@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #111111;
+  --color-fg: #ededed;
+  --color-muted: #888888;
+  --color-accent: #facc15;
+  --color-border: #333333;
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+  position: relative;
+  z-index: 0;
+}
+
+::selection {
+  background: var(--color-fg);
+  color: var(--color-bg);
+}
+
+a {
+  color: var(--color-fg);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-muted);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar — matches dark minimalist theme */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) var(--color-bg);
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+  border: 2px solid var(--color-bg);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+*::-webkit-scrollbar-corner {
+  background: var(--color-bg);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes flareFloat1 {
+  0%, 100% { opacity: 0; transform: translate(0, 0) scale(0.8); }
+  25% { opacity: 0.15; transform: translate(2vw, 5vh) scale(1.2); }
+  50% { opacity: 0; transform: translate(5vw, -2vh) scale(0.9); }
+  75% { opacity: 0.15; transform: translate(-3vw, 4vh) scale(1.1); }
+}
+
+@keyframes flareFloat2 {
+  0%, 100% { opacity: 0; transform: translate(0, 0) scale(1); }
+  33% { opacity: 0.12; transform: translate(-4vw, -4vh) scale(1.3); }
+  66% { opacity: 0; transform: translate(3vw, 3vh) scale(0.8); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-scale-up {
+  animation: scaleUp 0.2s ease-out forwards;
+}
+
+.animate-flare-1 {
+  animation: flareFloat1 15s ease-in-out infinite;
+}
+
+.animate-flare-2 {
+  animation: flareFloat2 20s ease-in-out infinite;
+  animation-delay: 5s;
+}
+

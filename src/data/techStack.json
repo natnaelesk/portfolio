@@ -1,0 +1,44 @@
+{
+  "frontend": {
+    "title": "Frontend",
+    "items": [
+      "React",
+      "JavaScript",
+      "Tailwind CSS",
+      "HTML / CSS",
+      "Bootstrap",
+      "Framer Motion"
+    ]
+  },
+  "backend": {
+    "title": "Backend",
+    "items": [
+      "Node.js",
+      "Express",
+      "Django",
+      "Python",
+      "REST APIs",
+      "Authentication & sessions"
+    ]
+  },
+  "database": {
+    "title": "Database systems",
+    "items": [
+      "PostgreSQL",
+      "SQLite",
+      "Firebase",
+      "Vector databases",
+      "Schema design & migrations"
+    ]
+  },
+  "ai": {
+    "title": "AI-powered solutions",
+    "items": [
+      "LLM APIs (Groq, OpenAI)",
+      "RAG pipelines",
+      "Semantic search",
+      "Embeddings & vector search",
+      "Automation workflows"
+    ]
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "tabsOrder": ["Projects", "Education", "Work"],
+  "pagination": {
+    "pageSize": 2
+  },
+  "projects": [
+    {
+      "id": "hiriya-chatbot",
+      "name": "Smart Chatbot",
+      "desc": "RAG-powered university assistant that answers student questions about campus life, programs, and admissions.",
+      "image": "/projects/hiriya.png",
+      "links": {
+        "github": "https://github.com/natnaelesk/hiriya_ChatBot",
+        "demo": null
+      }
+    },
+    {
+      "id": "spoter",
+      "name": "YouTube Scraper",
+      "desc": "Scrapes YouTube channels and videos to detect sponsor brands for creators and marketers.",
+      "image": "/projects/spoter.png",
+      "links": {
+        "github": "https://github.com/natnaelesk/youtube-automation",
+        "demo": null
+      }
+    },
+    {
+      "id": "eth-x01",
+      "name": "DSA Practice Platform",
+      "desc": "Community platform for LeetCode-style coding challenges, Python lessons, and leaderboards.",
+      "image": "/projects/eth-x01.png",
+      "links": {
+        "github": "https://github.com/natnaelesk/ETH-X01",
+        "demo": null
+      }
+    },
+    {
+      "id": "exit-exam-prep",
+      "name": "AI Weakness Tracker",
+      "desc": "AI-powered study tool that tracks weak areas and helps CS students prepare for exit exams.",
+      "image": "/projects/exit-exam.png",
+      "links": {
+        "github": "https://github.com/natnaelesk/my_exit_preparation_app",
+        "demo": null
+      }
+    },
+    {
+      "id": "suuq-mobile",
+      "name": "Somali E-Commerce App",
+      "desc": "Somali marketplace for browsing listings and connecting buyers and sellers — web and mobile.",
+      "image": null,
+      "links": {
+        "github": "https://github.com/natnaelesk/suuq-mobile-app",
+        "demo": null
+      }
+    },
+    {
+      "id": "woliso-gebeya",
+      "name": "E-Commerce Marketplace",
+      "desc": "Full-stack marketplace for local sellers with Chapa payment integration and order tracking.",
+      "image": "/projects/woliso-gebeya.png",
+      "links": {
+        "github": "https://github.com/natnaelesk/Woliso-Gebeya",
+        "demo": null
+      }
+    }
+  ],
+  "work": [
+    {
+      "id": "mmi-technology",
+      "name": "MMI Technology",
+      "desc": "Built multiple production-ready web applications and internal tools over the past 8 months.",
+      "image": null,
+      "duration": "8 months",
+      "links": {
+        "company": null
+      }
+    },
+    {
+      "id": "upwork",
+      "name": "Upwork",
+      "desc": "Freelance work focused on AI integrations and automation for clients.",
+      "image": null,
+      "duration": "Ongoing",
+      "links": {
+        "company": "https://www.upwork.com"
+      }
+    },
+    {
+      "id": "internship-harar",
+      "name": "Internship, Harar",
+      "desc": "Provided IT support for a hospital management system. Troubleshooting, user assistance, and keeping day-to-day systems running.",
+      "image": null,
+      "duration": "Internship",
+      "links": {
+        "company": null
+      }
+    }
+  ],
+  "education": {
+    "upcoming": {
+      "hidden": true,
+      "degree": "Masters",
+      "detail": "Coming"
+    },
+    "university": {
+      "degree": "BSc Computer Science",
+      "school": "Ambo University",
+      "detail": "3.70 / 4.00 CGPA"
+    },
+    "certificatesHidden": false,
+    "certificates": [
+      {
+        "id": "foundations-cybersecurity",
+        "name": "Foundations of Cybersecurity",
+        "detail": "Google, Coursera. Completed February 2025. Grade: 94.45%.",
+        "image": null,
+        "link": "https://coursera.org/share/3526f805256d8ff4b1c33b3d902e3ab0"
+      },
+      {
+        "id": "programming-fundamentals-udacity",
+        "name": "Programming Fundamentals",
+        "detail": "Udacity Nanodegree. Completed August 2024.",
+        "image": null,
+        "link": "https://www.udacity.com/certificate/e/47dace78-4c4a-11ef-aa09-b3f8725fcd8c"
+      },
+      {
+        "id": "version-control-meta",
+        "name": "Version Control",
+        "detail": "Meta, Coursera. Completed November 2023. Grade: 91.25%.",
+        "image": null,
+        "link": "https://coursera.org/share/b53dfc22d9d7b48653ab29d53472423b"
+      },
+      {
+        "id": "android-mobile-meta",
+        "name": "Introduction to Android Mobile Application Development",
+        "detail": "Meta, Coursera. Completed October 2023. Grade: 91.25%.",
+        "image": null,
+        "link": "https://coursera.org/share/6d7ccc126de2b79ae7999906e043d234"
+      }
+    ]
+  }
+}
