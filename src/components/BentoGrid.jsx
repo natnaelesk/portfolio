@@ -1,12 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
-import HeroContent from "./sections/HeroContent.jsx";
-import AboutContent from "./sections/AboutContent.jsx";
-import ProjectsContent from "./sections/ProjectsContent.jsx";
-import SkillsContent from "./sections/SkillsContent.jsx";
-import ContactContent from "./sections/ContactContent.jsx";
+import * as Hero from "./sections/HeroContent.jsx";
+import * as About from "./sections/AboutContent.jsx";
+import * as Projects from "./sections/ProjectsContent.jsx";
+import * as Skills from "./sections/SkillsContent.jsx";
+import * as Contact from "./sections/ContactContent.jsx";
 
 /*
- * The five persistent boxes (A-E) morph between sections: same DOM nodes,
+ * Eight persistent boxes (A-H) morph between sections: same DOM nodes,
  * new grid placement each section, framer-motion `layout` animates the move.
  *
  * Placement format: [colStart, colEnd, rowStart, rowEnd] on a 12x8 grid.
@@ -15,49 +15,65 @@ import ContactContent from "./sections/ContactContent.jsx";
 const LAYOUTS = [
   // 0 — Hero
   {
-    A: [8, 13, 1, 9], // portrait
     B: [1, 8, 1, 6], // big intro
-    C: [1, 5, 6, 9], // socials
-    D: [5, 8, 6, 9], // availability
+    A: [8, 13, 1, 7], // portrait
+    D: [8, 13, 7, 9], // availability strip
+    F: [1, 3, 6, 9], // GitHub
+    G: [3, 5, 6, 9], // LinkedIn
+    H: [5, 8, 6, 9], // Upwork
+    C: null,
     E: null,
   },
   // 1 — About
   {
-    A: [1, 5, 3, 9], // portrait (smaller)
     B: [1, 13, 1, 3], // heading strip
-    C: [5, 13, 3, 7], // about text
-    D: [5, 9, 7, 9], // stats
-    E: [9, 13, 7, 9], // experience
+    A: [1, 4, 3, 9], // portrait
+    C: [4, 9, 3, 7], // story
+    E: [9, 13, 3, 7], // experience
+    D: [4, 7, 7, 9], // stat 1
+    F: [7, 10, 7, 9], // stat 2
+    G: [10, 13, 7, 9], // stat 3
+    H: null,
   },
   // 2 — Projects
   {
+    B: [1, 4, 1, 3], // heading
+    D: [4, 6, 1, 3], // filter: all
+    F: [6, 8, 1, 3], // filter: personal
+    G: [8, 10, 1, 3], // filter: production
+    H: [10, 13, 1, 3], // filter: stacks
+    C: [1, 13, 3, 9], // carousel wrapper
     A: null,
-    B: [1, 13, 1, 3], // heading + filters
-    C: [1, 13, 3, 9], // project list
-    D: null,
     E: null,
   },
   // 3 — Skills & Services
   {
-    A: null,
     B: [1, 13, 1, 3], // heading strip
-    C: [1, 8, 3, 9], // skills
-    D: [8, 13, 3, 7], // services
-    E: [8, 13, 7, 9], // note
-    },
+    C: [1, 4, 3, 6], // frontend
+    D: [4, 7, 3, 6], // backend
+    F: [7, 10, 3, 6], // ai/ml
+    G: [10, 13, 3, 6], // data & infra
+    E: [1, 8, 6, 9], // services
+    H: [8, 13, 6, 9], // note / how I ship
+    A: null,
+  },
   // 4 — Contact
   {
-    A: [8, 13, 1, 9], // form
     B: [1, 8, 1, 6], // big CTA
-    C: [1, 8, 6, 9], // contact details
+    A: [8, 13, 1, 9], // form
+    C: [1, 8, 6, 7], // email strip
+    F: [1, 3, 7, 9], // GitHub
+    G: [3, 5, 7, 9], // LinkedIn
+    H: [5, 8, 7, 9], // Upwork
     D: null,
     E: null,
   },
 ];
 
-const SPRING = { type: "spring", stiffness: 170, damping: 24, mass: 0.9 };
+// Softer, heavier spring = calmer, smoother morphs.
+const SPRING = { type: "spring", stiffness: 120, damping: 26, mass: 1 };
 
-function Box({ id, section, children, flat }) {
+function Box({ id, section, children }) {
   const place = LAYOUTS[section][id];
   const visible = !!place;
 
@@ -67,14 +83,17 @@ function Box({ id, section, children, flat }) {
       transition={SPRING}
       animate={{
         opacity: visible ? 1 : 0,
-        scale: visible ? 1 : 0.92,
+        scale: visible ? 1 : 0.95,
       }}
       style={{
         gridColumn: place ? `${place[0]} / ${place[1]}` : "1 / 2",
         gridRow: place ? `${place[2]} / ${place[3]}` : "1 / 2",
-        background: flat ? "transparent" : "var(--panel)",
-        border: flat ? "none" : "1px solid var(--line)",
+        background: "var(--panel)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        border: "1px solid var(--line)",
         borderRadius: "var(--radius)",
+        boxShadow: "var(--shadow)",
         overflow: "hidden",
         position: "relative",
         pointerEvents: visible ? "auto" : "none",
@@ -86,10 +105,10 @@ function Box({ id, section, children, flat }) {
       <AnimatePresence mode="wait">
         <motion.div
           key={section}
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.32, ease: "easeOut" }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
           style={{ height: "100%", minHeight: 0 }}
         >
           {visible ? children : null}
@@ -99,16 +118,10 @@ function Box({ id, section, children, flat }) {
   );
 }
 
-export default function BentoGrid({ section, goTo }) {
-  const content = {
-    0: HeroContent,
-    1: AboutContent,
-    2: ProjectsContent,
-    3: SkillsContent,
-    4: ContactContent,
-  }[section];
+const BOX_IDS = ["B", "A", "C", "D", "E", "F", "G", "H"];
 
-  const C = content;
+export default function BentoGrid({ section, goTo }) {
+  const C = [Hero, About, Projects, Skills, Contact][section];
 
   return (
     <div
@@ -117,25 +130,20 @@ export default function BentoGrid({ section, goTo }) {
         display: "grid",
         gridTemplateColumns: "repeat(12, 1fr)",
         gridTemplateRows: "repeat(8, 1fr)",
-        gap: "13px",
-        padding: "64px 56px 40px 26px",
+        gap: "12px",
+        padding: "62px 52px 34px 26px",
+        position: "relative",
+        zIndex: 1,
       }}
     >
-      <Box id="B" section={section}>
-        <C.B goTo={goTo} />
-      </Box>
-      <Box id="A" section={section}>
-        <C.A goTo={goTo} />
-      </Box>
-      <Box id="C" section={section}>
-        <C.C goTo={goTo} />
-      </Box>
-      <Box id="D" section={section}>
-        <C.D goTo={goTo} />
-      </Box>
-      <Box id="E" section={section}>
-        <C.E goTo={goTo} />
-      </Box>
+      {BOX_IDS.map((id) => {
+        const Content = C[id];
+        return (
+          <Box key={id} id={id} section={section}>
+            {Content ? <Content goTo={goTo} /> : null}
+          </Box>
+        );
+      })}
     </div>
   );
 }

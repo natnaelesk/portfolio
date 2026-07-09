@@ -37,10 +37,9 @@ export default function Loader({ onDone }) {
               ease: [0.33, 1, 0.68, 1],
             }}
             style={{
-              fontFamily: "var(--font-display)",
               fontSize: "clamp(2.4rem, 7vw, 5rem)",
-              fontWeight: 600,
-              letterSpacing: "-0.03em",
+              fontWeight: 700,
+              letterSpacing: "-0.035em",
               whiteSpace: "pre",
               color: ch === "." ? "var(--accent)" : "var(--text)",
             }}
@@ -53,9 +52,8 @@ export default function Loader({ onDone }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9 }}
           style={{
-            fontFamily: "var(--font-display)",
             fontSize: "clamp(2.4rem, 7vw, 5rem)",
-            fontWeight: 600,
+            fontWeight: 700,
             color: "var(--accent)",
           }}
         >
@@ -81,8 +79,8 @@ export default function Loader({ onDone }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.1, duration: 0.5 }}
         style={{
-          fontFamily: "var(--font-mono)",
           fontSize: "0.72rem",
+          fontWeight: 600,
           letterSpacing: "0.28em",
           textTransform: "uppercase",
           color: "var(--muted)",

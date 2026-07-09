@@ -2,39 +2,61 @@ import profile from "../../data/profile.json";
 import images from "../../data/images.json";
 import { Pad, Label, ImageOrPlaceholder } from "../ui.jsx";
 
-function B() {
+/* B — heading strip */
+export function B() {
   return (
-    <Pad style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+    <Pad
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
       <h2
         style={{
-          fontFamily: "var(--font-display)",
-          fontWeight: 600,
-          fontSize: "clamp(1.6rem, 3.4vw, 2.8rem)",
-          letterSpacing: "-0.02em",
+          fontSize: "clamp(1.5rem, 2.6vw, 2.4rem)",
+          fontWeight: 700,
+          letterSpacing: "-0.03em",
         }}
       >
         About<span style={{ color: "var(--accent)" }}>.</span>
       </h2>
-      <Label>The person behind the commits</Label>
+      <Label>Builder · Engineer · Cursor Ambassador</Label>
     </Pad>
   );
 }
 
-function A() {
-  return <ImageOrPlaceholder src={images.about || images.portrait} alt={profile.name} label="about image" />;
+/* A — portrait */
+export function A() {
+  return (
+    <ImageOrPlaceholder
+      src={images.about || images.portrait}
+      alt={profile.name}
+      label="photo"
+    />
+  );
 }
 
-function C() {
+/* C — the story, clear and open */
+export function C() {
   return (
-    <Pad className="thin-scroll" style={{ overflowY: "auto", gap: "14px", justifyContent: "center" }}>
+    <Pad
+      className="thin-scroll"
+      style={{ overflowY: "auto", gap: "14px" }}
+      onWheel={(e) => {
+        const el = e.currentTarget;
+        if (el.scrollHeight > el.clientHeight) e.stopPropagation();
+      }}
+    >
       {profile.about.map((p, i) => (
         <p
           key={i}
           style={{
+            fontSize: i === 0 ? "clamp(0.95rem, 1.35vw, 1.2rem)" : "clamp(0.85rem, 1.1vw, 1rem)",
+            lineHeight: 1.6,
             color: i === 0 ? "var(--text)" : "var(--muted)",
-            fontSize: "clamp(0.85rem, 1.25vw, 1.05rem)",
-            lineHeight: 1.7,
-            maxWidth: "68ch",
+            fontWeight: i === 0 ? 500 : 450,
+            maxWidth: "58ch",
           }}
         >
           {p}
@@ -44,61 +66,61 @@ function C() {
   );
 }
 
-function D() {
+/* E — experience timeline */
+export function E() {
   return (
-    <Pad
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(4, 1fr)",
-        alignItems: "center",
-        gap: "clamp(8px, 1.5vw, 20px)",
-      }}
-    >
-      {profile.stats.map((s) => (
-        <div key={s.label} style={{ minWidth: 0 }}>
-          <div
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 600,
-              fontSize: "clamp(1.2rem, 2.3vw, 2rem)",
-              color: "var(--accent)",
-              lineHeight: 1,
-            }}
-          >
-            {s.value}
-          </div>
-          <div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.58rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "var(--muted)",
-              marginTop: "6px",
-              lineHeight: 1.5,
-            }}
-          >
-            {s.label}
-          </div>
-        </div>
-      ))}
-    </Pad>
-  );
-}
-
-function E() {
-  return (
-    <Pad style={{ justifyContent: "center", gap: "10px" }} className="thin-scroll">
+    <Pad className="thin-scroll" style={{ overflowY: "auto", gap: "4px" }}>
+      <Label style={{ marginBottom: "10px" }}>Experience</Label>
       {profile.experience.map((e) => (
-        <div key={e.role} style={{ display: "flex", flexDirection: "column" }}>
-          <span style={{ fontSize: "0.82rem", fontWeight: 600 }}>{e.role}</span>
-          <span style={{ fontSize: "0.72rem", color: "var(--muted)" }}>
-            {e.org} — {e.period}
-          </span>
+        <div
+          key={e.role}
+          style={{
+            padding: "10px 0",
+            borderBottom: "1px solid var(--line)",
+          }}
+        >
+          <div style={{ fontWeight: 600, fontSize: "0.88rem" }}>{e.role}</div>
+          <div style={{ fontSize: "0.76rem", color: "var(--muted)", marginTop: "3px" }}>
+            {e.org}
+          </div>
+          <div style={{ fontSize: "0.7rem", color: "var(--accent)", marginTop: "3px", fontWeight: 550 }}>
+            {e.period}
+          </div>
         </div>
       ))}
     </Pad>
   );
 }
 
-export default { A, B, C, D, E };
+/* D, F, G — one stat per box */
+function Stat({ index }) {
+  const s = profile.stats[index];
+  if (!s) return null;
+  return (
+    <Pad style={{ justifyContent: "center", gap: "4px" }}>
+      <div
+        style={{
+          fontSize: "clamp(1.6rem, 3vw, 2.6rem)",
+          fontWeight: 700,
+          letterSpacing: "-0.03em",
+          color: "var(--accent)",
+        }}
+      >
+        {s.value}
+      </div>
+      <div style={{ fontSize: "0.78rem", color: "var(--muted)", fontWeight: 500 }}>
+        {s.label}
+      </div>
+    </Pad>
+  );
+}
+
+export function D() {
+  return <Stat index={0} />;
+}
+export function F() {
+  return <Stat index={2} />;
+}
+export function G() {
+  return <Stat index={3} />;
+}

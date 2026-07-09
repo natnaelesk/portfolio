@@ -2,143 +2,230 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import profile from "../../data/profile.json";
 import { Pad, Label } from "../ui.jsx";
+import { GitHubIcon, LinkedInIcon, UpworkIcon, MailIcon } from "../icons.jsx";
 
-function B() {
+/* B — big CTA */
+export function B() {
   return (
     <Pad style={{ justifyContent: "space-between" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
         <motion.span
-          animate={{ opacity: [1, 0.3, 1], scale: [1, 1.15, 1] }}
-          transition={{ repeat: Infinity, duration: 2 }}
+          animate={{ opacity: [1, 0.35, 1] }}
+          transition={{ duration: 2.2, repeat: Infinity }}
           style={{
             width: "10px",
             height: "10px",
             borderRadius: "50%",
-            background: "#4ade80",
-            display: "inline-block",
+            background: "var(--green)",
+            boxShadow: "0 0 0 5px rgba(48,209,88,0.15)",
           }}
         />
-        <Label>{profile.availabilityNote}</Label>
+        <Label style={{ color: "var(--text)" }}>Open to opportunities</Label>
       </div>
-      <h2
-        style={{
-          fontFamily: "var(--font-display)",
-          fontWeight: 600,
-          fontSize: "clamp(2rem, 4.6vw, 4rem)",
-          lineHeight: 1.05,
-          letterSpacing: "-0.03em",
-        }}
-      >
-        Let&apos;s build
-        <br />
-        <span style={{ color: "var(--muted)" }}>something great</span>
-        <span style={{ color: "var(--accent)" }}>.</span>
-      </h2>
-      <Label>Usually replies within a day</Label>
+      <div>
+        <h2
+          style={{
+            fontSize: "clamp(1.8rem, 3.8vw, 3.6rem)",
+            fontWeight: 700,
+            letterSpacing: "-0.035em",
+            lineHeight: 1.05,
+          }}
+        >
+          Let&rsquo;s build
+          <br />
+          <span style={{ color: "var(--muted)" }}>something real.</span>
+        </h2>
+        <p
+          style={{
+            marginTop: "14px",
+            maxWidth: "44ch",
+            color: "var(--muted)",
+            fontSize: "clamp(0.85rem, 1.15vw, 1.02rem)",
+            lineHeight: 1.55,
+            fontWeight: 450,
+          }}
+        >
+          {profile.availabilityNote}
+        </p>
+      </div>
+      <Label>{profile.location} · Remote worldwide</Label>
     </Pad>
   );
 }
 
-function A() {
-  const [state, setState] = useState({ name: "", email: "", message: "" });
-  const [sent, setSent] = useState(false);
+/* A — message form -> mailto */
+export function A() {
+  const [name, setName] = useState("");
+  const [msg, setMsg] = useState("");
 
-  const submit = (e) => {
+  const send = (e) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Opportunity — from ${state.name || "your portfolio"}`);
-    const body = encodeURIComponent(`${state.message}\n\n— ${state.name} (${state.email})`);
+    const subject = encodeURIComponent(`Portfolio contact — ${name || "hello"}`);
+    const body = encodeURIComponent(msg);
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
-    setSent(true);
   };
 
   const field = {
     background: "var(--panel-2)",
     border: "1px solid var(--line)",
-    borderRadius: "12px",
+    borderRadius: "14px",
     padding: "13px 16px",
     fontSize: "0.88rem",
     width: "100%",
+    color: "var(--text)",
   };
 
   return (
-    <Pad style={{ justifyContent: "center", gap: "12px" }}>
-      <Label>Send a message</Label>
-      <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <Pad>
+      <form
+        onSubmit={send}
+        style={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
+        }}
+      >
+        <Label>Send a message</Label>
         <input
           style={field}
           placeholder="Your name"
-          value={state.name}
-          required
-          onChange={(e) => setState({ ...state, name: e.target.value })}
-        />
-        <input
-          style={field}
-          type="email"
-          placeholder="Your email"
-          value={state.email}
-          required
-          onChange={(e) => setState({ ...state, email: e.target.value })}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
         <textarea
-          style={{ ...field, resize: "none", minHeight: "110px" }}
+          style={{ ...field, flex: 1, resize: "none", minHeight: 0 }}
           placeholder="What are we building?"
-          value={state.message}
-          required
-          onChange={(e) => setState({ ...state, message: e.target.value })}
+          value={msg}
+          onChange={(e) => setMsg(e.target.value)}
         />
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+        <button
           type="submit"
           style={{
-            padding: "13px",
-            borderRadius: "12px",
             background: "var(--accent)",
-            color: "#0a0a0c",
-            fontWeight: 600,
+            color: "#fff",
+            borderRadius: "999px",
+            padding: "13px",
+            fontWeight: 650,
             fontSize: "0.9rem",
           }}
         >
-          {sent ? "Opening your mail app…" : "Send it →"}
-        </motion.button>
+          Send it
+        </button>
       </form>
     </Pad>
   );
 }
 
-function C() {
+/* C — email in its own horizontal strip */
+export function C() {
   return (
-    <Pad style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "12px" }}>
-      <div>
-        <Label>Email</Label>
-        <div style={{ fontFamily: "var(--font-display)", fontSize: "clamp(0.85rem, 1.4vw, 1.1rem)", marginTop: "4px" }}>
-          {profile.email}
-        </div>
-      </div>
-      <div style={{ display: "flex", gap: "16px" }}>
-        {Object.entries(profile.socials).map(([name, url]) => (
-          <a
-            key={name}
-            href={url}
-            target="_blank"
-            rel="noreferrer"
+    <a href={`mailto:${profile.email}`} style={{ display: "block", height: "100%" }}>
+      <Pad
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "14px",
+          justifyContent: "flex-start",
+        }}
+      >
+        <span
+          style={{
+            width: "40px",
+            height: "40px",
+            borderRadius: "12px",
+            background: "var(--accent-dim)",
+            color: "var(--accent)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexShrink: 0,
+          }}
+        >
+          <MailIcon size={19} />
+        </span>
+        <div style={{ minWidth: 0 }}>
+          <div
             style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.72rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: "var(--muted)",
+              fontWeight: 650,
+              fontSize: "clamp(0.85rem, 1.2vw, 1.05rem)",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
             }}
           >
-            {name} ↗
-          </a>
-        ))}
-      </div>
-    </Pad>
+            {profile.email}
+          </div>
+          <div style={{ fontSize: "0.72rem", color: "var(--muted)", marginTop: "2px" }}>
+            Fastest way to reach me
+          </div>
+        </div>
+      </Pad>
+    </a>
   );
 }
 
-function D() { return null; }
-function E() { return null; }
+/* link boxes — same treatment as the hero */
+function LinkBox({ href, icon, name, tint }) {
+  return (
+    <motion.a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      whileHover={{ scale: 1.02 }}
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "8px",
+        color: tint,
+      }}
+    >
+      <span style={{ transform: "scale(1.5)" }}>{icon}</span>
+      <span
+        style={{
+          fontSize: "0.68rem",
+          fontWeight: 600,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "var(--muted)",
+        }}
+      >
+        {name}
+      </span>
+    </motion.a>
+  );
+}
 
-export default { A, B, C, D, E };
+export function F() {
+  return (
+    <LinkBox
+      href={profile.socials.github}
+      icon={<GitHubIcon size={24} />}
+      name="GitHub"
+      tint="#1d1d1f"
+    />
+  );
+}
+export function G() {
+  return (
+    <LinkBox
+      href={profile.socials.linkedin}
+      icon={<LinkedInIcon size={24} />}
+      name="LinkedIn"
+      tint="#0a66c2"
+    />
+  );
+}
+export function H() {
+  return (
+    <LinkBox
+      href={profile.socials.upwork}
+      icon={<UpworkIcon size={24} />}
+      name="Upwork"
+      tint="#14a800"
+    />
+  );
+}

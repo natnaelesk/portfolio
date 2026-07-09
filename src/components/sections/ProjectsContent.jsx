@@ -1,303 +1,541 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import data from "../../data/projects.json";
 import images from "../../data/images.json";
-import { Pad, Label, ImageOrPlaceholder } from "../ui.jsx";
+import { Pad, Label, BrowserMockup, PhoneMockup } from "../ui.jsx";
+import {
+  GitHubIcon,
+  GlobeIcon,
+  AppleIcon,
+  PlayStoreIcon,
+  ArrowIcon,
+} from "../icons.jsx";
 
-const ALL = "All";
+/* ---- tiny shared store so the filter boxes (D/F/G/H) and the
+   carousel (C) — separate bento boxes — stay in sync ---- */
+let filter = { type: "all", stack: null };
+const listeners = new Set();
+function setFilter(patch) {
+  filter = { ...filter, ...patch };
+  listeners.forEach((l) => l());
+}
+function useFilter() {
+  return useSyncExternalStore(
+    (cb) => {
+      listeners.add(cb);
+      return () => listeners.delete(cb);
+    },
+    () => filter
+  );
+}
 
-/* Module-level filter state so it survives the box content remounting
-   between section transitions. */
-let savedFilter = ALL;
-let savedType = "all";
+const STACKS = ["Full Stack", "Web", "Mobile", "AI", "Backend", "Frontend", "Automation"];
 
-function B() {
+/* B — heading */
+export function B() {
   return (
-    <Pad style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
+    <Pad style={{ justifyContent: "center", gap: "4px" }}>
       <h2
         style={{
-          fontFamily: "var(--font-display)",
-          fontWeight: 600,
-          fontSize: "clamp(1.6rem, 3.4vw, 2.8rem)",
-          letterSpacing: "-0.02em",
+          fontSize: "clamp(1.4rem, 2.4vw, 2.2rem)",
+          fontWeight: 700,
+          letterSpacing: "-0.03em",
         }}
       >
         Projects<span style={{ color: "var(--accent)" }}>.</span>
       </h2>
-      <Label>
-        {data.projects.length} builds — web · mobile · AI
-      </Label>
+      <Label>{data.projects.length} builds</Label>
     </Pad>
   );
 }
 
-function SoonPopup({ onClose }) {
+/* ---- filter boxes ---- */
+function TypeFilterBox({ value, label, sub }) {
+  const f = useFilter();
+  const active = f.type === value;
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.6)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 200,
-        backdropFilter: "blur(4px)",
-      }}
+    <button
+      onClick={() => setFilter({ type: value, stack: null })}
+      style={{ width: "100%", height: "100%" }}
     >
       <motion.div
-        initial={{ scale: 0.85, y: 12 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9 }}
-        onClick={(e) => e.stopPropagation()}
+        animate={{
+          backgroundColor: active ? "rgba(0,113,227,0.09)" : "rgba(0,0,0,0)",
+        }}
         style={{
-          background: "var(--panel)",
-          border: "1px solid var(--line)",
-          borderRadius: "16px",
-          padding: "34px 44px",
-          textAlign: "center",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "3px",
         }}
       >
-        <div style={{ fontSize: "2rem", marginBottom: "8px" }}>🚀</div>
-        <div style={{ fontFamily: "var(--font-display)", fontSize: "1.2rem", fontWeight: 600 }}>
-          Soon<span style={{ color: "var(--accent)" }}>.</span>
-        </div>
-        <p style={{ color: "var(--muted)", fontSize: "0.85rem", marginTop: "6px" }}>
-          This link goes live very soon.
-        </p>
-        <button
-          onClick={onClose}
+        <span
           style={{
-            marginTop: "18px",
-            padding: "8px 22px",
-            borderRadius: "999px",
-            background: "var(--accent)",
-            color: "#0a0a0c",
-            fontWeight: 600,
-            fontSize: "0.8rem",
+            fontWeight: 650,
+            fontSize: "clamp(0.85rem, 1.15vw, 1.05rem)",
+            color: active ? "var(--accent)" : "var(--text)",
           }}
         >
-          Got it
-        </button>
+          {label}
+        </span>
+        <span style={{ fontSize: "0.68rem", color: "var(--muted)", fontWeight: 500 }}>
+          {sub}
+        </span>
       </motion.div>
-    </motion.div>
+    </button>
   );
 }
 
-function LinkPill({ label, href, onSoon }) {
-  const style = {
-    padding: "6px 14px",
+export function D() {
+  return <TypeFilterBox value="all" label="All" sub="everything" />;
+}
+export function F() {
+  const n = data.projects.filter((p) => p.type === "personal").length;
+  return <TypeFilterBox value="personal" label="Personal" sub={`${n} projects`} />;
+}
+export function G() {
+  const n = data.projects.filter((p) => p.type === "production").length;
+  return <TypeFilterBox value="production" label="Production" sub={`${n} shipped`} />;
+}
+
+/* H — stack sub-filters, horizontal chips */
+export function H() {
+  const f = useFilter();
+  return (
+    <Pad style={{ justifyContent: "center", gap: "8px", padding: "10px 14px" }}>
+      <Label style={{ fontSize: "0.6rem" }}>Stack</Label>
+      <div
+        className="no-scrollbar"
+        style={{
+          display: "flex",
+          gap: "6px",
+          overflowX: "auto",
+          paddingBottom: "2px",
+        }}
+        onWheel={(e) => {
+          e.stopPropagation();
+          e.currentTarget.scrollLeft += e.deltaY;
+        }}
+      >
+        {STACKS.map((s) => {
+          const active = f.stack === s;
+          return (
+            <button
+              key={s}
+              onClick={() => setFilter({ stack: active ? null : s })}
+              style={{
+                flexShrink: 0,
+                padding: "6px 12px",
+                borderRadius: "999px",
+                fontSize: "0.72rem",
+                fontWeight: 600,
+                border: `1px solid ${active ? "var(--accent)" : "var(--line)"}`,
+                background: active ? "var(--accent)" : "var(--panel-solid)",
+                color: active ? "#fff" : "var(--muted)",
+                transition: "all 0.2s ease",
+              }}
+            >
+              {s}
+            </button>
+          );
+        })}
+      </div>
+    </Pad>
+  );
+}
+
+/* ---- carousel pieces ---- */
+
+function Toggle({ on }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <div
+        style={{
+          width: "34px",
+          height: "20px",
+          borderRadius: "999px",
+          background: on ? "var(--green)" : "rgba(0,0,0,0.12)",
+          position: "relative",
+          transition: "background 0.25s ease",
+          flexShrink: 0,
+        }}
+      >
+        <motion.span
+          animate={{ x: on ? 15 : 2 }}
+          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          style={{
+            position: "absolute",
+            top: "2px",
+            width: "16px",
+            height: "16px",
+            borderRadius: "50%",
+            background: "#fff",
+            boxShadow: "0 1px 3px rgba(0,0,0,0.25)",
+          }}
+        />
+      </div>
+      <span
+        style={{
+          fontSize: "0.68rem",
+          fontWeight: 650,
+          letterSpacing: "0.1em",
+          textTransform: "uppercase",
+          color: on ? "var(--green)" : "var(--muted)",
+        }}
+      >
+        {on ? "Production" : "Personal"}
+      </span>
+    </div>
+  );
+}
+
+function LinkBtn({ href, icon, label, soon, onSoon }) {
+  const base = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "7px",
+    padding: "8px 15px",
     borderRadius: "999px",
+    fontSize: "0.78rem",
+    fontWeight: 600,
     border: "1px solid var(--line)",
-    fontSize: "0.72rem",
-    fontFamily: "var(--font-mono)",
-    letterSpacing: "0.05em",
+    background: "var(--panel-solid)",
+    color: "var(--text)",
     whiteSpace: "nowrap",
-    transition: "border-color 0.2s, color 0.2s",
   };
-  if (href === "") {
+  if (soon) {
     return (
-      <button style={{ ...style, color: "var(--muted)" }} onClick={onSoon}>
-        {label} · soon
+      <button onClick={onSoon} style={{ ...base, color: "var(--muted)" }}>
+        {icon} {label}
       </button>
     );
   }
-  if (!href) return null;
   return (
-    <a href={href} target="_blank" rel="noreferrer" style={style}>
-      {label} ↗
+    <a href={href} target="_blank" rel="noreferrer" style={base}>
+      {icon} {label}
     </a>
   );
 }
 
-function ProjectRow({ p, onSoon }) {
-  const img = images.projects[p.id];
-  return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.25 }}
+function StoreBadge({ kind, href, onSoon }) {
+  const isApple = kind === "appstore";
+  const inner = (
+    <span
       style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(120px, 200px) 1fr",
-        gap: "18px",
-        background: "var(--panel-2)",
-        border: "1px solid var(--line)",
-        borderRadius: "16px",
-        flexShrink: 0,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "6px",
+        padding: "6px 11px",
+        borderRadius: "9px",
+        background: "#1d1d1f",
+        color: "#fff",
+        fontSize: "0.62rem",
+        fontWeight: 600,
+        letterSpacing: "0.02em",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
       }}
     >
-      <div style={{ minHeight: "150px", borderRadius: "16px 0 0 16px", overflow: "hidden" }}>
-        <ImageOrPlaceholder src={img} alt={p.title} label="screenshot" />
-      </div>
-      <div style={{ padding: "16px 18px 16px 0", display: "flex", flexDirection: "column", gap: "9px", minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "baseline", gap: "10px", flexWrap: "wrap" }}>
-          <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.1rem", fontWeight: 600 }}>
-            {p.title}
-          </h3>
-          <span
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.6rem",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase",
-              padding: "3px 10px",
-              borderRadius: "999px",
-              background: p.type === "production" ? "var(--accent-dim)" : "rgba(255,255,255,0.06)",
-              color: p.type === "production" ? "var(--accent)" : "var(--muted)",
-            }}
-          >
-            {p.type}
-          </span>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.65rem", color: "var(--muted)" }}>
-            {p.year} — {p.role}
-          </span>
-        </div>
-        <p style={{ color: "var(--muted)", fontSize: "0.83rem", lineHeight: 1.55, maxWidth: "75ch" }}>
-          {p.description}
-        </p>
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-          {p.tech.map((t) => (
-            <span key={t} style={{ fontFamily: "var(--font-mono)", fontSize: "0.62rem", color: "var(--muted)" }}>
-              {t}
-            </span>
-          ))}
-        </div>
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", paddingBottom: "2px" }}>
-          <LinkPill label="web" href={p.links.web} onSoon={onSoon} />
-          <LinkPill label="github" href={p.links.github} onSoon={onSoon} />
-          <LinkPill label="app store" href={p.links.appstore} onSoon={onSoon} />
-          <LinkPill label="play store" href={p.links.playstore} onSoon={onSoon} />
-        </div>
-      </div>
-    </motion.article>
+      {isApple ? <AppleIcon size={13} /> : <PlayStoreIcon size={12} />}
+      {isApple ? "App Store" : "Play Store"}
+    </span>
+  );
+  if (!href) {
+    return (
+      <button onClick={onSoon} style={{ padding: 0 }}>
+        {inner}
+      </button>
+    );
+  }
+  return (
+    <a href={href} target="_blank" rel="noreferrer">
+      {inner}
+    </a>
   );
 }
 
-function C() {
-  const [filter, setFilter] = useState(savedFilter);
-  const [type, setType] = useState(savedType);
-  const [soon, setSoon] = useState(false);
-  const listRef = useRef(null);
-
-  const categories = useMemo(() => {
-    const set = new Set();
-    data.projects.forEach((p) => p.categories.forEach((c) => set.add(c)));
-    return [ALL, ...set];
-  }, []);
-
-  const filtered = data.projects.filter(
-    (p) =>
-      (filter === ALL || p.categories.includes(filter)) &&
-      (type === "all" || p.type === type)
-  );
-
-  const pick = (f) => { savedFilter = f; setFilter(f); };
-  const pickType = (t) => { savedType = t; setType(t); };
-
-  /* Keep wheel events inside the list unless we're at an edge. */
-  const onWheel = (e) => {
-    const el = listRef.current;
-    if (!el) return;
-    const atTop = el.scrollTop <= 0 && e.deltaY < 0;
-    const atBottom =
-      el.scrollTop + el.clientHeight >= el.scrollHeight - 2 && e.deltaY > 0;
-    if (!atTop && !atBottom) e.stopPropagation();
-  };
+function ProjectCard({ p, onSoon }) {
+  const shot = images.projects[p.id];
+  const isMobile = p.categories.includes("Mobile");
+  const showApp = p.links.appstore !== null && p.links.appstore !== undefined;
+  const showPlay = p.links.playstore !== null && p.links.playstore !== undefined;
 
   return (
-    <Pad style={{ gap: "14px" }}>
-      {/* filter bar */}
-      <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: "10px" }}>
-        <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
-          {categories.map((c) => (
-            <button
-              key={c}
-              onClick={() => pick(c)}
-              style={{
-                padding: "6px 14px",
-                borderRadius: "999px",
-                fontSize: "0.72rem",
-                fontFamily: "var(--font-mono)",
-                border: "1px solid",
-                borderColor: filter === c ? "var(--accent)" : "var(--line)",
-                color: filter === c ? "var(--accent)" : "var(--muted)",
-                background: filter === c ? "var(--accent-dim)" : "transparent",
-              }}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-        {/* personal / production toggle */}
-        <div
-          style={{
-            display: "flex",
-            borderRadius: "999px",
-            border: "1px solid var(--line)",
-            overflow: "hidden",
-          }}
-        >
-          {["all", "personal", "production"].map((t) => (
-            <button
-              key={t}
-              onClick={() => pickType(t)}
-              style={{
-                padding: "6px 14px",
-                fontSize: "0.68rem",
-                fontFamily: "var(--font-mono)",
-                textTransform: "capitalize",
-                background: type === t ? "var(--accent)" : "transparent",
-                color: type === t ? "#0a0a0c" : "var(--muted)",
-                fontWeight: type === t ? 600 : 400,
-              }}
-            >
-              {t}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* scrollable list */}
-      <div
-        ref={listRef}
-        className="thin-scroll"
-        onWheel={onWheel}
+    <article
+      style={{
+        flexShrink: 0,
+        width: "min(78%, 880px)",
+        height: "100%",
+        scrollSnapAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        gap: "10px",
+        background: "var(--panel-solid)",
+        border: "1px solid var(--line)",
+        borderRadius: "18px",
+        padding: "clamp(12px, 1.4vw, 20px)",
+        position: "relative",
+        boxShadow: "var(--shadow)",
+      }}
+    >
+      {/* top: toggle + title */}
+      <header
         style={{
-          overflowY: "auto",
           display: "flex",
-          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-between",
           gap: "12px",
-          paddingRight: "6px",
-          flex: 1,
-          minHeight: 0,
+          flexShrink: 0,
         }}
       >
-        <AnimatePresence mode="popLayout">
-          {filtered.map((p) => (
-            <ProjectRow key={p.id} p={p} onSoon={() => setSoon(true)} />
+        <div style={{ minWidth: 0 }}>
+          <h3
+            style={{
+              fontSize: "clamp(1rem, 1.5vw, 1.3rem)",
+              fontWeight: 700,
+              letterSpacing: "-0.02em",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {p.title}
+            <span style={{ color: "var(--muted)", fontWeight: 500, fontSize: "0.78em" }}>
+              {" "}
+              — {p.tagline}
+            </span>
+          </h3>
+        </div>
+        <Toggle on={p.type === "production"} />
+      </header>
+
+      {/* mockup */}
+      <div style={{ flex: 1, minHeight: 0, paddingRight: isMobile ? "clamp(90px, 11vw, 160px)" : 0 }}>
+        <BrowserMockup src={shot} alt={p.title} />
+      </div>
+
+      {/* bottom: links */}
+      <footer style={{ display: "flex", gap: "8px", flexShrink: 0, alignItems: "center" }}>
+        {p.links.github && (
+          <LinkBtn href={p.links.github} icon={<GitHubIcon size={15} />} label="GitHub" />
+        )}
+        {p.links.web !== null &&
+          (p.links.web ? (
+            <LinkBtn href={p.links.web} icon={<GlobeIcon size={15} />} label="Live" />
+          ) : (
+            <LinkBtn soon onSoon={onSoon} icon={<GlobeIcon size={15} />} label="Live" />
           ))}
-        </AnimatePresence>
-        {filtered.length === 0 && (
-          <p style={{ color: "var(--muted)", fontFamily: "var(--font-mono)", fontSize: "0.8rem" }}>
-            No projects match this filter (yet).
-          </p>
+        <span style={{ marginLeft: "auto", fontSize: "0.7rem", color: "var(--muted)", fontWeight: 550 }}>
+          {p.year} · {p.role}
+        </span>
+      </footer>
+
+      {/* phone mockups + store badges — bottom right, mobile projects only */}
+      {isMobile && (
+        <div
+          style={{
+            position: "absolute",
+            right: "clamp(14px, 1.6vw, 24px)",
+            bottom: "clamp(48px, 5.5vh, 64px)",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "10px",
+            zIndex: 3,
+          }}
+        >
+          <div style={{ display: "flex", gap: "6px" }}>
+            {showApp && (
+              <StoreBadge kind="appstore" href={p.links.appstore || null} onSoon={onSoon} />
+            )}
+            {showPlay && (
+              <StoreBadge kind="playstore" href={p.links.playstore || null} onSoon={onSoon} />
+            )}
+          </div>
+          <div style={{ display: "flex", gap: "8px", alignItems: "flex-end" }}>
+            <div style={{ transform: "rotate(-4deg)" }}>
+              <PhoneMockup kind="iphone" src={shot} alt={`${p.title} iOS`} />
+            </div>
+            <div style={{ transform: "rotate(3deg) translateY(6px)" }}>
+              <PhoneMockup kind="android" src={shot} alt={`${p.title} Android`} />
+            </div>
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
+
+/* C — the carousel wrapper */
+export function C() {
+  const f = useFilter();
+  const trackRef = useRef(null);
+  const [index, setIndex] = useState(0);
+  const [soon, setSoon] = useState(false);
+  const soonTimer = useRef(null);
+
+  const projects = data.projects.filter((p) => {
+    if (f.type !== "all" && p.type !== f.type) return false;
+    if (f.stack && !p.categories.includes(f.stack)) return false;
+    return true;
+  });
+
+  const showSoon = () => {
+    setSoon(true);
+    clearTimeout(soonTimer.current);
+    soonTimer.current = setTimeout(() => setSoon(false), 1800);
+  };
+
+  const jump = (dir) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const card = el.querySelector("article");
+    const step = card ? card.offsetWidth + 14 : el.clientWidth * 0.8;
+    el.scrollBy({ left: dir * step, behavior: "smooth" });
+  };
+
+  // arrow keys navigate the carousel while Projects is on screen
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "ArrowRight") jump(1);
+      if (e.key === "ArrowLeft") jump(-1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // track which card is centered
+  const onScroll = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    const card = el.querySelector("article");
+    const step = card ? card.offsetWidth + 14 : 1;
+    setIndex(Math.min(projects.length - 1, Math.round(el.scrollLeft / step)));
+  };
+
+  // reset scroll when the filter changes
+  useEffect(() => {
+    trackRef.current?.scrollTo({ left: 0 });
+    setIndex(0);
+  }, [f.type, f.stack]);
+
+  return (
+    <div style={{ height: "100%", position: "relative", display: "flex", flexDirection: "column" }}>
+      <div
+        ref={trackRef}
+        className="no-scrollbar"
+        onScroll={onScroll}
+        onWheel={(e) => {
+          // scroll inside the box moves the carousel, not the sections
+          e.stopPropagation();
+          if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            e.currentTarget.scrollLeft += e.deltaY;
+          }
+        }}
+        style={{
+          flex: 1,
+          minHeight: 0,
+          display: "flex",
+          gap: "14px",
+          overflowX: "auto",
+          scrollSnapType: "x mandatory",
+          padding: "clamp(12px, 1.4vw, 20px)",
+          scrollBehavior: "smooth",
+        }}
+      >
+        {projects.map((p) => (
+          <ProjectCard key={p.id} p={p} onSoon={showSoon} />
+        ))}
+        {projects.length === 0 && (
+          <div
+            style={{
+              margin: "auto",
+              color: "var(--muted)",
+              fontSize: "0.85rem",
+              fontWeight: 500,
+            }}
+          >
+            Nothing matches this filter yet.
+          </div>
         )}
       </div>
 
-      <AnimatePresence>{soon && <SoonPopup onClose={() => setSoon(false)} />}</AnimatePresence>
-    </Pad>
+      {/* prev / next controls — vertically centered on the edges */}
+      {[-1, 1].map((dir) => (
+        <button
+          key={dir}
+          onClick={() => jump(dir)}
+          style={{
+            position: "absolute",
+            top: "50%",
+            transform: "translateY(-50%)",
+            ...(dir === 1 ? { right: "10px" } : { left: "10px" }),
+            width: "36px",
+            height: "36px",
+            borderRadius: "50%",
+            border: "1px solid var(--line)",
+            background: "rgba(255,255,255,0.9)",
+            backdropFilter: "blur(8px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "var(--text)",
+            boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
+            zIndex: 5,
+          }}
+        >
+          <ArrowIcon size={15} dir={dir === 1 ? "right" : "left"} />
+        </button>
+      ))}
+
+      {/* counter pill */}
+      <span
+        style={{
+          position: "absolute",
+          bottom: "12px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          fontSize: "0.68rem",
+          color: "var(--muted)",
+          fontWeight: 600,
+          background: "rgba(255,255,255,0.9)",
+          border: "1px solid var(--line)",
+          borderRadius: "999px",
+          padding: "4px 12px",
+          zIndex: 5,
+          letterSpacing: "0.08em",
+        }}
+      >
+        {projects.length === 0 ? 0 : index + 1} / {projects.length}
+      </span>
+
+      {/* Soon popup */}
+      <AnimatePresence>
+        {soon && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+            style={{
+              position: "absolute",
+              bottom: "20px",
+              left: "50%",
+              x: "-50%",
+              background: "#1d1d1f",
+              color: "#fff",
+              padding: "10px 20px",
+              borderRadius: "999px",
+              fontSize: "0.8rem",
+              fontWeight: 600,
+              zIndex: 10,
+              boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
+            }}
+          >
+            Launching soon — stay tuned
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
-
-function A() { return null; }
-function D() { return null; }
-function E() { return null; }
-
-export default { A, B, C, D, E };

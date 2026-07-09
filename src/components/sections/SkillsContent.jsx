@@ -1,92 +1,150 @@
 import profile from "../../data/profile.json";
 import { Pad, Label } from "../ui.jsx";
 
-function B() {
+/* B — heading strip */
+export function B() {
   return (
-    <Pad style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+    <Pad
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}
+    >
       <h2
         style={{
-          fontFamily: "var(--font-display)",
-          fontWeight: 600,
-          fontSize: "clamp(1.6rem, 3.4vw, 2.8rem)",
-          letterSpacing: "-0.02em",
+          fontSize: "clamp(1.5rem, 2.6vw, 2.4rem)",
+          fontWeight: 700,
+          letterSpacing: "-0.03em",
         }}
       >
         Skills &amp; Services<span style={{ color: "var(--accent)" }}>.</span>
       </h2>
-      <Label>What I work with — and what I can do for you</Label>
+      <Label>What I build with — and what I build for you</Label>
     </Pad>
   );
 }
 
-function C() {
-  return (
-    <Pad className="thin-scroll" style={{ overflowY: "auto", gap: "18px", justifyContent: "center" }}>
-      {profile.skills.map((g) => (
-        <div key={g.group}>
-          <Label>{g.group}</Label>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", marginTop: "8px" }}>
-            {g.items.map((s) => (
-              <span
-                key={s}
-                style={{
-                  padding: "7px 16px",
-                  borderRadius: "10px",
-                  background: "var(--panel-2)",
-                  border: "1px solid var(--line)",
-                  fontSize: "clamp(0.75rem, 1.1vw, 0.9rem)",
-                  fontFamily: "var(--font-display)",
-                }}
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        </div>
-      ))}
-    </Pad>
-  );
-}
+/* one skill group per box */
+const TINTS = ["#0071e3", "#af52de", "#ff9500", "#30d158"];
 
-function D() {
+function SkillGroup({ index }) {
+  const g = profile.skills[index];
+  if (!g) return null;
   return (
-    <Pad className="thin-scroll" style={{ overflowY: "auto", gap: "12px", justifyContent: "center" }}>
-      {profile.services.map((s, i) => (
-        <div key={s.name} style={{ display: "flex", gap: "12px", alignItems: "baseline" }}>
+    <Pad className="thin-scroll" style={{ overflowY: "auto", gap: "10px" }}>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <span
+          style={{
+            width: "8px",
+            height: "8px",
+            borderRadius: "3px",
+            background: TINTS[index % TINTS.length],
+            flexShrink: 0,
+          }}
+        />
+        <Label style={{ color: "var(--text)" }}>{g.group}</Label>
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+        {g.items.map((item) => (
           <span
+            key={item}
             style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: "0.65rem",
-              color: "var(--accent)",
+              padding: "6px 12px",
+              borderRadius: "999px",
+              fontSize: "0.74rem",
+              fontWeight: 550,
+              background: "var(--panel-2)",
+              color: "var(--text)",
             }}
           >
-            {String(i + 1).padStart(2, "0")}
+            {item}
           </span>
-          <div>
-            <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "0.95rem" }}>
+        ))}
+      </div>
+    </Pad>
+  );
+}
+
+export function C() {
+  return <SkillGroup index={0} />;
+}
+export function D() {
+  return <SkillGroup index={1} />;
+}
+export function F() {
+  return <SkillGroup index={2} />;
+}
+export function G() {
+  return <SkillGroup index={3} />;
+}
+
+/* E — services, 2x2 */
+export function E() {
+  return (
+    <Pad style={{ gap: "10px" }}>
+      <Label>Services</Label>
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "10px",
+        }}
+      >
+        {profile.services.map((s) => (
+          <div
+            key={s.name}
+            style={{
+              borderRadius: "14px",
+              background: "var(--panel-2)",
+              padding: "clamp(10px, 1.2vw, 16px)",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              gap: "4px",
+              minHeight: 0,
+              overflow: "hidden",
+            }}
+          >
+            <div style={{ fontWeight: 650, fontSize: "clamp(0.8rem, 1vw, 0.95rem)" }}>
               {s.name}
             </div>
-            <div style={{ color: "var(--muted)", fontSize: "0.78rem", lineHeight: 1.5 }}>
+            <div
+              style={{
+                fontSize: "clamp(0.68rem, 0.85vw, 0.78rem)",
+                color: "var(--muted)",
+                lineHeight: 1.45,
+              }}
+            >
               {s.desc}
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </Pad>
   );
 }
 
-function E() {
+/* H — how I ship */
+export function H() {
   return (
-    <Pad style={{ justifyContent: "center", background: "var(--accent-dim)" }}>
-      <p style={{ fontSize: "0.85rem", lineHeight: 1.6 }}>
-        Everything I ship is <strong>SEO-optimized</strong> — my products rank{" "}
-        <span style={{ color: "var(--accent)" }}>first on Google</span> for their names.
+    <Pad style={{ justifyContent: "center", gap: "10px" }}>
+      <Label>How I ship</Label>
+      <p
+        style={{
+          fontSize: "clamp(0.85rem, 1.1vw, 1rem)",
+          lineHeight: 1.6,
+          color: "var(--text)",
+          fontWeight: 500,
+        }}
+      >
+        One engineer, the whole stack — frontend, backend, database, CI/CD, DNS
+        and mail. Every launch SEO-optimized and{" "}
+        <span style={{ color: "var(--accent)" }}>ranking first on Google</span>{" "}
+        for its name.
       </p>
     </Pad>
   );
 }
-
-function A() { return null; }
-
-export default { A, B, C, D, E };

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import BentoGrid from "./BentoGrid.jsx";
+import Beams from "./Beams.jsx";
 
 export const SECTIONS = ["Home", "About", "Projects", "Skills", "Contact"];
 
@@ -67,6 +68,8 @@ export default function Scene() {
       animate={{ opacity: 1, transition: { duration: 0.5 } }}
       style={{ height: "100%", position: "relative" }}
     >
+      <Beams />
+
       {/* top chrome */}
       <header
         style={{
@@ -85,9 +88,9 @@ export default function Scene() {
         <button
           onClick={() => setSection(0)}
           style={{
-            fontFamily: "var(--font-display)",
-            fontWeight: 600,
+            fontWeight: 700,
             fontSize: "1.15rem",
+            letterSpacing: "-0.02em",
             pointerEvents: "auto",
           }}
         >
@@ -95,8 +98,8 @@ export default function Scene() {
         </button>
         <div
           style={{
-            fontFamily: "var(--font-mono)",
             fontSize: "0.7rem",
+            fontWeight: 600,
             letterSpacing: "0.2em",
             color: "var(--muted)",
           }}
@@ -129,7 +132,7 @@ export default function Scene() {
               animate={{
                 scale: section === i ? 1 : 0.55,
                 backgroundColor:
-                  section === i ? "var(--accent)" : "rgba(255,255,255,0.25)",
+                  section === i ? "var(--accent)" : "rgba(0,0,0,0.18)",
               }}
               style={{
                 width: "9px",
@@ -152,7 +155,7 @@ export default function Scene() {
           bottom: "16px",
           left: "50%",
           transform: "translateX(-50%)",
-          fontFamily: "var(--font-mono)",
+          fontWeight: 600,
           fontSize: "0.65rem",
           letterSpacing: "0.3em",
           textTransform: "uppercase",
