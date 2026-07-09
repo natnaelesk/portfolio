@@ -1,18 +1,20 @@
 import { motion } from "framer-motion";
 import profile from "../../data/profile.json";
 import images from "../../data/images.json";
-import { Pad, Label, ImageOrPlaceholder } from "../ui.jsx";
-import { GitHubIcon, LinkedInIcon, UpworkIcon, ArrowIcon } from "../icons.jsx";
+import { Pad, Label, ImageOrPlaceholder, AppIconBox } from "../ui.jsx";
+import { ArrowIcon } from "../icons.jsx";
 
-/* B — big intro */
+/* B — big intro (tall) */
 export function B({ goTo }) {
   return (
     <Pad style={{ justifyContent: "space-between" }}>
-      <Label>Full-stack engineer — {profile.location}</Label>
+      <Label style={{ fontSize: "clamp(0.68rem, 0.8vw, 0.82rem)" }}>
+        Full-stack engineer — {profile.location}
+      </Label>
       <div>
         <h1
           style={{
-            fontSize: "clamp(2.1rem, 4.6vw, 4.4rem)",
+            fontSize: "clamp(2.2rem, 5.2vw, 5.4rem)",
             fontWeight: 700,
             letterSpacing: "-0.035em",
             lineHeight: 1.03,
@@ -26,9 +28,9 @@ export function B({ goTo }) {
         </h1>
         <p
           style={{
-            marginTop: "clamp(12px, 1.6vw, 22px)",
-            maxWidth: "46ch",
-            fontSize: "clamp(0.9rem, 1.25vw, 1.12rem)",
+            marginTop: "clamp(14px, 2vw, 28px)",
+            maxWidth: "50ch",
+            fontSize: "clamp(0.95rem, 1.45vw, 1.32rem)",
             lineHeight: 1.55,
             color: "var(--muted)",
             fontWeight: 450,
@@ -38,34 +40,10 @@ export function B({ goTo }) {
         </p>
       </div>
       <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        <button
-          onClick={() => goTo(2)}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            background: "var(--accent)",
-            color: "#fff",
-            padding: "11px 20px",
-            borderRadius: "999px",
-            fontSize: "0.88rem",
-            fontWeight: 600,
-          }}
-        >
+        <button className="btn-primary" onClick={() => goTo(2)}>
           See the work <ArrowIcon size={15} />
         </button>
-        <button
-          onClick={() => goTo(4)}
-          style={{
-            padding: "11px 20px",
-            borderRadius: "999px",
-            fontSize: "0.88rem",
-            fontWeight: 600,
-            border: "1px solid var(--line)",
-            background: "var(--panel-solid)",
-            color: "var(--text)",
-          }}
-        >
+        <button className="btn-ghost" onClick={() => goTo(4)}>
           Get in touch
         </button>
       </div>
@@ -73,7 +51,7 @@ export function B({ goTo }) {
   );
 }
 
-/* A — portrait */
+/* A — portrait, stretches with the screen */
 export function A() {
   return (
     <div style={{ height: "100%", position: "relative" }}>
@@ -98,7 +76,7 @@ export function A() {
   );
 }
 
-/* D — availability strip (horizontal) */
+/* D — availability strip (capped height, never stretches) */
 export function D({ goTo }) {
   return (
     <button onClick={() => goTo(4)} style={{ width: "100%", height: "100%", textAlign: "left" }}>
@@ -106,8 +84,9 @@ export function D({ goTo }) {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          gap: "14px",
+          gap: "12px",
           justifyContent: "flex-start",
+          padding: "clamp(10px, 1.2vw, 16px) clamp(14px, 1.8vw, 22px)",
         }}
       >
         <motion.span
@@ -122,15 +101,15 @@ export function D({ goTo }) {
             flexShrink: 0,
           }}
         />
-        <div>
-          <div style={{ fontWeight: 650, fontSize: "clamp(0.85rem, 1.1vw, 1rem)" }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontWeight: 650, fontSize: "clamp(0.82rem, 1vw, 0.95rem)" }}>
             Available for work
           </div>
-          <div style={{ fontSize: "0.74rem", color: "var(--muted)", marginTop: "2px" }}>
+          <div style={{ fontSize: "0.7rem", color: "var(--muted)", marginTop: "1px" }}>
             Remote · worldwide
           </div>
         </div>
-        <span style={{ marginLeft: "auto", color: "var(--muted)" }}>
+        <span style={{ marginLeft: "auto", color: "var(--muted)", flexShrink: 0 }}>
           <ArrowIcon size={16} />
         </span>
       </Pad>
@@ -138,69 +117,13 @@ export function D({ goTo }) {
   );
 }
 
-/* Social link boxes — each one a full box, filled with the brand mark. */
-function SocialBox({ href, icon, name, tint }) {
-  return (
-    <motion.a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      whileHover={{ scale: 1.02 }}
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "10px",
-        color: tint,
-      }}
-    >
-      <span style={{ transform: "scale(1.9)" }}>{icon}</span>
-      <span
-        style={{
-          fontSize: "0.72rem",
-          fontWeight: 600,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: "var(--muted)",
-        }}
-      >
-        {name}
-      </span>
-    </motion.a>
-  );
-}
-
+/* F / G / H — social links as small iOS-style app icons */
 export function F() {
-  return (
-    <SocialBox
-      href={profile.socials.github}
-      icon={<GitHubIcon size={26} />}
-      name="GitHub"
-      tint="#1d1d1f"
-    />
-  );
+  return <AppIconBox name="github" url={profile.socials.github} />;
 }
-
 export function G() {
-  return (
-    <SocialBox
-      href={profile.socials.linkedin}
-      icon={<LinkedInIcon size={26} />}
-      name="LinkedIn"
-      tint="#0a66c2"
-    />
-  );
+  return <AppIconBox name="linkedin" url={profile.socials.linkedin} />;
 }
-
 export function H() {
-  return (
-    <SocialBox
-      href={profile.socials.upwork}
-      icon={<UpworkIcon size={26} />}
-      name="Upwork"
-      tint="#14a800"
-    />
-  );
+  return <AppIconBox name="upwork" url={profile.socials.upwork} />;
 }

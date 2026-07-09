@@ -9,9 +9,9 @@
   "availabilityNote": "If you can see this, I'm open to opportunities. Send me a message.",
   "intro": "I turn ideas into production-ready products — web, mobile, and AI-powered. Solo when needed, team player when it counts.",
   "about": [
-    "I'm a full-stack engineer working as a mid-senior solo developer at MMI Technology Solutions, where I build everything clients ask for — web apps, mobile apps on both stores, backends, databases, CI/CD pipelines and DNS. From first commit to production.",
-    "Self-taught at the core, CS degree from Ambo University (3.70 CGPA), 380+ LeetCode problems deep, and currently growing into AI engineering through RAG systems, LLM integrations and automation. Cursor Ambassador — I organize meetups and hackathons for the dev community.",
-    "Every product I ship is SEO-optimized and ranks first on Google for its name."
+    "I'm a full-stack engineer working as a ==mid-senior solo developer== at MMI Technology Solutions, where I build ==everything clients ask for== — web apps, mobile apps on both stores, backends, databases, CI/CD pipelines and DNS. From first commit to production.",
+    "Self-taught at the core, CS degree from Ambo University (==3.70 CGPA==), ==380+ LeetCode problems== deep, and currently growing into ==AI engineering== through RAG systems, LLM integrations and automation. Cursor Ambassador — I organize meetups and hackathons for the dev community.",
+    "Every product I ship is ==SEO-optimized and ranks first on Google== for its name."
   ],
   "stats": [
     { "value": "10+", "label": "Production builds" },

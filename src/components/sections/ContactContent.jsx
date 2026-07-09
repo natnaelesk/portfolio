@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import profile from "../../data/profile.json";
-import { Pad, Label } from "../ui.jsx";
-import { GitHubIcon, LinkedInIcon, UpworkIcon, MailIcon } from "../icons.jsx";
+import { Pad, Label, AppIconBox } from "../ui.jsx";
+import { MailIcon } from "../icons.jsx";
 
 /* B — big CTA */
 export function B() {
@@ -56,12 +56,15 @@ export function B() {
 /* A — message form -> mailto */
 export function A() {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
 
   const send = (e) => {
     e.preventDefault();
     const subject = encodeURIComponent(`Portfolio contact — ${name || "hello"}`);
-    const body = encodeURIComponent(msg);
+    const body = encodeURIComponent(
+      `${msg}\n\n—\n${name}${email ? `\n${email}` : ""}`
+    );
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
   };
 
@@ -93,6 +96,13 @@ export function A() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+        <input
+          style={field}
+          type="email"
+          placeholder="Your email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <textarea
           style={{ ...field, flex: 1, resize: "none", minHeight: 0 }}
           placeholder="What are we building?"
@@ -100,17 +110,11 @@ export function A() {
           onChange={(e) => setMsg(e.target.value)}
         />
         <button
+          className="btn-primary"
           type="submit"
-          style={{
-            background: "var(--accent)",
-            color: "#fff",
-            borderRadius: "999px",
-            padding: "13px",
-            fontWeight: 650,
-            fontSize: "0.9rem",
-          }}
+          style={{ width: "100%", padding: "14px", fontSize: "0.92rem" }}
         >
-          Send it
+          Send it →
         </button>
       </form>
     </Pad>
@@ -165,67 +169,13 @@ export function C() {
   );
 }
 
-/* link boxes — same treatment as the hero */
-function LinkBox({ href, icon, name, tint }) {
-  return (
-    <motion.a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      whileHover={{ scale: 1.02 }}
-      style={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "8px",
-        color: tint,
-      }}
-    >
-      <span style={{ transform: "scale(1.5)" }}>{icon}</span>
-      <span
-        style={{
-          fontSize: "0.68rem",
-          fontWeight: 600,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
-          color: "var(--muted)",
-        }}
-      >
-        {name}
-      </span>
-    </motion.a>
-  );
-}
-
+/* F / G / H — social links as small iOS-style app icons */
 export function F() {
-  return (
-    <LinkBox
-      href={profile.socials.github}
-      icon={<GitHubIcon size={24} />}
-      name="GitHub"
-      tint="#1d1d1f"
-    />
-  );
+  return <AppIconBox name="github" url={profile.socials.github} />;
 }
 export function G() {
-  return (
-    <LinkBox
-      href={profile.socials.linkedin}
-      icon={<LinkedInIcon size={24} />}
-      name="LinkedIn"
-      tint="#0a66c2"
-    />
-  );
+  return <AppIconBox name="linkedin" url={profile.socials.linkedin} />;
 }
 export function H() {
-  return (
-    <LinkBox
-      href={profile.socials.upwork}
-      icon={<UpworkIcon size={24} />}
-      name="Upwork"
-      tint="#14a800"
-    />
-  );
+  return <AppIconBox name="upwork" url={profile.socials.upwork} />;
 }

@@ -1,4 +1,7 @@
-/* Shared pieces: padding wrapper, labels, image placeholder, device mockups. */
+/* Shared pieces: padding wrapper, labels, image placeholder, device mockups,
+   app-icon social boxes. */
+import { motion } from "framer-motion";
+import { GitHubIcon, LinkedInIcon, UpworkIcon } from "./icons.jsx";
 
 export function Pad({ children, style, className, ...rest }) {
   return (
@@ -76,6 +79,40 @@ export function ImageOrPlaceholder({ src, alt, label }) {
       </span>
       )}
     </div>
+  );
+}
+
+/* ---- app-icon social boxes (iOS style: brand color fill, white glyph) ---- */
+
+const BRANDS = {
+  github: { Icon: GitHubIcon, bg: "#1d1d1f" },
+  linkedin: { Icon: LinkedInIcon, bg: "#0a66c2" },
+  upwork: { Icon: UpworkIcon, bg: "#14a800" },
+};
+
+export function AppIconBox({ name, url }) {
+  const { Icon, bg } = BRANDS[name] || BRANDS.github;
+  return (
+    <motion.a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      title={name}
+      whileHover={{ scale: 1.08 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        background: bg,
+        color: "#fff",
+      }}
+    >
+      <Icon size="46%" />
+    </motion.a>
   );
 }
 

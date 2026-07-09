@@ -49,7 +49,7 @@ export function B() {
   );
 }
 
-/* ---- filter boxes ---- */
+/* ---- filter boxes (wide + short, rectangular) ---- */
 function TypeFilterBox({ value, label, sub }) {
   const f = useFilter();
   const active = f.type === value;
@@ -65,22 +65,30 @@ function TypeFilterBox({ value, label, sub }) {
         style={{
           height: "100%",
           display: "flex",
-          flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: "3px",
+          gap: "9px",
+          padding: "0 14px",
         }}
       >
         <span
           style={{
             fontWeight: 650,
-            fontSize: "clamp(0.85rem, 1.15vw, 1.05rem)",
+            fontSize: "clamp(0.82rem, 1.05vw, 1rem)",
             color: active ? "var(--accent)" : "var(--text)",
+            whiteSpace: "nowrap",
           }}
         >
           {label}
         </span>
-        <span style={{ fontSize: "0.68rem", color: "var(--muted)", fontWeight: 500 }}>
+        <span
+          style={{
+            fontSize: "0.66rem",
+            color: "var(--muted)",
+            fontWeight: 500,
+            whiteSpace: "nowrap",
+          }}
+        >
           {sub}
         </span>
       </motion.div>
@@ -100,19 +108,28 @@ export function G() {
   return <TypeFilterBox value="production" label="Production" sub={`${n} shipped`} />;
 }
 
-/* H — stack sub-filters, horizontal chips */
+/* H — stack sub-filters, their own row below the type filters */
 export function H() {
   const f = useFilter();
   return (
-    <Pad style={{ justifyContent: "center", gap: "8px", padding: "10px 14px" }}>
-      <Label style={{ fontSize: "0.6rem" }}>Stack</Label>
+    <Pad
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: "14px",
+        padding: "8px 16px",
+      }}
+    >
+      <Label style={{ fontSize: "0.6rem", flexShrink: 0 }}>Stack</Label>
       <div
         className="no-scrollbar"
         style={{
           display: "flex",
+          alignItems: "center",
           gap: "6px",
           overflowX: "auto",
-          paddingBottom: "2px",
+          flex: 1,
+          minWidth: 0,
         }}
         onWheel={(e) => {
           e.stopPropagation();
@@ -193,27 +210,19 @@ function Toggle({ on }) {
 
 function LinkBtn({ href, icon, label, soon, onSoon }) {
   const base = {
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "7px",
-    padding: "8px 15px",
-    borderRadius: "999px",
+    padding: "9px 16px",
     fontSize: "0.78rem",
-    fontWeight: 600,
-    border: "1px solid var(--line)",
-    background: "var(--panel-solid)",
-    color: "var(--text)",
     whiteSpace: "nowrap",
   };
   if (soon) {
     return (
-      <button onClick={onSoon} style={{ ...base, color: "var(--muted)" }}>
+      <button className="btn-ghost" onClick={onSoon} style={{ ...base, color: "var(--muted)" }}>
         {icon} {label}
       </button>
     );
   }
   return (
-    <a href={href} target="_blank" rel="noreferrer" style={base}>
+    <a className="btn-ghost" href={href} target="_blank" rel="noreferrer" style={base}>
       {icon} {label}
     </a>
   );
@@ -311,7 +320,14 @@ function ProjectCard({ p, onSoon }) {
       </header>
 
       {/* mockup */}
-      <div style={{ flex: 1, minHeight: 0, paddingRight: isMobile ? "clamp(90px, 11vw, 160px)" : 0 }}>
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          paddingLeft: isMobile ? "clamp(70px, 8vw, 120px)" : 0,
+          paddingRight: isMobile ? "clamp(70px, 8vw, 120px)" : 0,
+        }}
+      >
         <BrowserMockup src={shot} alt={p.title} />
       </div>
 
@@ -331,37 +347,44 @@ function ProjectCard({ p, onSoon }) {
         </span>
       </footer>
 
-      {/* phone mockups + store badges — bottom right, mobile projects only */}
+      {/* phone mockups — iPhone pinned to the left border, Android to the right, straight */}
       {isMobile && (
-        <div
-          style={{
-            position: "absolute",
-            right: "clamp(14px, 1.6vw, 24px)",
-            bottom: "clamp(48px, 5.5vh, 64px)",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "10px",
-            zIndex: 3,
-          }}
-        >
-          <div style={{ display: "flex", gap: "6px" }}>
+        <>
+          <div
+            style={{
+              position: "absolute",
+              left: "clamp(12px, 1.4vw, 22px)",
+              bottom: "clamp(66px, 9vh, 92px)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "10px",
+              zIndex: 3,
+            }}
+          >
             {showApp && (
               <StoreBadge kind="appstore" href={p.links.appstore || null} onSoon={onSoon} />
             )}
+            <PhoneMockup kind="iphone" src={shot} alt={`${p.title} iOS`} />
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              right: "clamp(12px, 1.4vw, 22px)",
+              bottom: "clamp(66px, 9vh, 92px)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "10px",
+              zIndex: 3,
+            }}
+          >
             {showPlay && (
               <StoreBadge kind="playstore" href={p.links.playstore || null} onSoon={onSoon} />
             )}
+            <PhoneMockup kind="android" src={shot} alt={`${p.title} Android`} />
           </div>
-          <div style={{ display: "flex", gap: "8px", alignItems: "flex-end" }}>
-            <div style={{ transform: "rotate(-4deg)" }}>
-              <PhoneMockup kind="iphone" src={shot} alt={`${p.title} iOS`} />
-            </div>
-            <div style={{ transform: "rotate(3deg) translateY(6px)" }}>
-              <PhoneMockup kind="android" src={shot} alt={`${p.title} Android`} />
-            </div>
-          </div>
-        </div>
+        </>
       )}
     </article>
   );
