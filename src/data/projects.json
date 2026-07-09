@@ -1,0 +1,158 @@
+{
+  "_comment": "links: web null = hide button. appstore/playstore empty string '' = show button with 'Soon' popup, null = hide. Fill live links as they release.",
+  "projects": [
+    {
+      "id": "suuq",
+      "title": "Suuq",
+      "tagline": "Somali marketplace — web, iOS & Android",
+      "description": "Full marketplace platform for the Somali market: listings, search, chat between buyers and sellers. Built solo end-to-end — web app, mobile apps (both stores), backend, database, CI/CD and DNS management.",
+      "type": "production",
+      "categories": ["Full Stack", "Mobile", "Web"],
+      "tech": ["React", "React Native", "Node.js", "PostgreSQL", "CI/CD"],
+      "year": "2026",
+      "role": "Solo engineer — everything",
+      "links": {
+        "web": null,
+        "github": "https://github.com/natnaelesk/suuq-mobile-app",
+        "appstore": "",
+        "playstore": ""
+      }
+    },
+    {
+      "id": "globalbizdir",
+      "title": "GlobalBizDir",
+      "tagline": "Global business directory platform",
+      "description": "Business directory web platform built solo at MMI Technologies: full backend, database design, deployment pipeline and DNS management. Production system serving real businesses.",
+      "type": "production",
+      "categories": ["Full Stack", "Web"],
+      "tech": ["React", "Node.js", "PostgreSQL", "CI/CD"],
+      "year": "2026",
+      "role": "Solo engineer — everything",
+      "links": {
+        "web": null,
+        "github": "https://github.com/mmigithubacc/globalbizdir",
+        "appstore": null,
+        "playstore": null
+      }
+    },
+    {
+      "id": "hawkeye",
+      "title": "Hawkeye Africa",
+      "tagline": "AI-powered civic accountability platform",
+      "description": "Africa's first ward-level cartographic accountability platform — 47 counties, 1,450 wards, 10,000+ projects tracked for the Kenyan government. I built backend services and integrations as part of the team.",
+      "type": "production",
+      "categories": ["Web", "AI", "Backend"],
+      "tech": ["Backend", "Integrations", "Geospatial", "AI"],
+      "year": "2026",
+      "role": "Backend developer & integration",
+      "links": {
+        "web": "https://hawkeyekenya.com/",
+        "github": null,
+        "appstore": null,
+        "playstore": null
+      }
+    },
+    {
+      "id": "agunta",
+      "title": "Agunta Construction",
+      "tagline": "Construction company platform — Uganda",
+      "description": "Client web app for a multinational construction company: project showcase with self-serve content management, proper mail service, DNS setup and full SEO — ranks first on Google for its name.",
+      "type": "production",
+      "categories": ["Web", "Frontend"],
+      "tech": ["React", "Supabase", "SEO", "Mail service"],
+      "year": "2026",
+      "role": "Solo engineer",
+      "links": {
+        "web": "https://www.aguntaconstructionltd.com/",
+        "github": null,
+        "appstore": null,
+        "playstore": null
+      }
+    },
+    {
+      "id": "hiriya-chatbot",
+      "title": "Hiriya",
+      "tagline": "RAG chatbot for Ambo University",
+      "description": "University assistant powered by a vector database with departments, admissions, campus locations and services. Answers from embedded knowledge. Recognized by the university's Technology Department.",
+      "type": "personal",
+      "categories": ["AI", "Full Stack"],
+      "tech": ["React", "Node.js", "RAG", "Vector DB", "Embeddings"],
+      "year": "2025",
+      "role": "Creator — team of 5",
+      "links": {
+        "web": null,
+        "github": "https://github.com/natnaelesk/hiriya_ChatBot",
+        "appstore": null,
+        "playstore": null
+      }
+    },
+    {
+      "id": "youtube-sponsor-detector",
+      "title": "Sponsor Detector",
+      "tagline": "AI sponsorship scanner for YouTube",
+      "description": "Client MVP that detects video and channel sponsors: grabs transcript, description and title via the YouTube API, then uses OpenAI to identify sponsored content and brands.",
+      "type": "personal",
+      "categories": ["AI", "Automation"],
+      "tech": ["Python", "YouTube API", "OpenAI API"],
+      "year": "2025",
+      "role": "Solo build for a client",
+      "links": {
+        "web": null,
+        "github": "https://github.com/natnaelesk/youtube-automation",
+        "appstore": null,
+        "playstore": null
+      }
+    },
+    {
+      "id": "eth-x01",
+      "title": "ETH-X01",
+      "tagline": "DSA community platform",
+      "description": "Community platform for LeetCode-style coding challenges, Python lessons and leaderboards — built for the Ethiopian dev community I mentor.",
+      "type": "personal",
+      "categories": ["Web", "Full Stack"],
+      "tech": ["React", "Node.js", "PostgreSQL"],
+      "year": "2026",
+      "role": "Creator",
+      "links": {
+        "web": null,
+        "github": "https://github.com/natnaelesk/ETH-X01",
+        "appstore": null,
+        "playstore": null
+      }
+    },
+    {
+      "id": "exit-exam-prep",
+      "title": "AI Weakness Tracker",
+      "tagline": "Exam prep that learns your gaps",
+      "description": "AI-powered study tool that tracks weak areas and helps CS students prepare for exit exams. React + Django with AI-driven analysis of practice performance.",
+      "type": "personal",
+      "categories": ["AI", "Web"],
+      "tech": ["React", "Django", "AI"],
+      "year": "2025",
+      "role": "Creator",
+      "links": {
+        "web": null,
+        "github": "https://github.com/natnaelesk/my_exit_preparation_app",
+        "appstore": null,
+        "playstore": null
+      }
+    },
+    {
+      "id": "woliso-gebeya",
+      "title": "Woliso Gebeya",
+      "tagline": "Local e-commerce marketplace",
+      "description": "Full-stack marketplace for local sellers with Chapa payment integration and order tracking. One of my favorite Django + React builds.",
+      "type": "personal",
+      "categories": ["Web", "Full Stack"],
+      "tech": ["Django", "React", "Chapa", "PostgreSQL"],
+      "year": "2025",
+      "role": "Creator",
+      "links": {
+        "web": null,
+        "github": "https://github.com/natnaelesk/Woliso-Gebeya",
+        "appstore": null,
+        "playstore": null
+      }
+    }
+  ]
+}

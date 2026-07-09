@@ -1,0 +1,18 @@
+{
+  "_comment": "Put your image addresses here. Use a path under /public (e.g. /images/portrait.jpg) or a full https URL. Leave null to show the styled placeholder.",
+  "portrait": "/images/portrait.jpg",
+  "about": null,
+  "contact": null,
+  "projects": {
+    "suuq": null,
+    "globalbizdir": null,
+    "hawkeye": null,
+    "agunta": null,
+    "hiriya-chatbot": null,
+    "youtube-sponsor-detector": null,
+    "eth-x01": null,
+    "exit-exam-prep": null,
+    "woliso-gebeya": null,
+    "suuq-mobile": null
+  }
+}
