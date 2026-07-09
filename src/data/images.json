@@ -8,11 +8,11 @@
     "globalbizdir": null,
     "hawkeye": null,
     "agunta": null,
-    "hiriya-chatbot": null,
-    "youtube-sponsor-detector": null,
-    "eth-x01": null,
-    "exit-exam-prep": null,
-    "woliso-gebeya": null,
+    "hiriya-chatbot": "/projects/hiriya.png",
+    "youtube-sponsor-detector": "/projects/spoter.png",
+    "eth-x01": "/projects/eth-x01.png",
+    "exit-exam-prep": "/projects/exit-exam.png",
+    "woliso-gebeya": "/projects/woliso-gebeya.png",
     "suuq-mobile": null
   }
 }
