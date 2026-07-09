@@ -7,11 +7,16 @@
   "phone": "+251975086006",
   "available": true,
   "availabilityNote": "If you can see this, I'm open to opportunities. Send me a message.",
-  "intro": "I turn ideas into production-ready products — web, mobile, and AI-powered. Solo when needed, team player when it counts.",
+  "intro": "I turn ideas into production-ready products: web, mobile, and AI-powered. Solo when needed, team player when it counts.",
+  "aboutLead": "I take products from first commit to production, across the whole stack, usually solo.",
   "about": [
-    "I'm a full-stack engineer working as a ==mid-senior solo developer== at MMI Technology Solutions, where I build ==everything clients ask for== — web apps, mobile apps on both stores, backends, databases, CI/CD pipelines and DNS. From first commit to production.",
-    "Self-taught at the core, CS degree from Ambo University (==3.70 CGPA==), ==380+ LeetCode problems== deep, and currently growing into ==AI engineering== through RAG systems, LLM integrations and automation. Cursor Ambassador — I organize meetups and hackathons for the dev community.",
-    "Every product I ship is ==SEO-optimized and ranks first on Google== for its name."
+    "I'm a full-stack engineer working as a mid-senior solo developer at MMI Technology Solutions, building everything clients ask for: web apps, mobile apps on both stores, backends, databases, CI/CD pipelines and DNS.",
+    "Self-taught at the core, CS degree from Ambo University with a 3.70 CGPA, 380+ LeetCode problems deep, and currently growing into AI engineering through RAG systems, LLM integrations and automation. Cursor Ambassador, organizing meetups and hackathons for the dev community."
+  ],
+  "differentiators": [
+    "One engineer, the ==whole stack==: frontend, backend, data, deploys, DNS and mail",
+    "Apps built, shipped and ==live on both stores==, not just portfolio demos",
+    "Every launch is SEO-optimized and __ranks first on Google__ for its name"
   ],
   "stats": [
     { "value": "10+", "label": "Production builds" },
@@ -22,7 +27,8 @@
   "socials": {
     "github": "https://github.com/natnaelesk",
     "linkedin": "https://www.linkedin.com/in/natnaelesk",
-    "upwork": "https://www.upwork.com/freelancers/nate4",
+    "instagram": "https://www.instagram.com/natnaelesk",
+    "telegram": "https://t.me/natnaelesk",
     "website": "https://natnaelesk.com"
   },
   "skills": [
@@ -33,25 +39,25 @@
   ],
   "services": [
     { "name": "Full-stack product build", "desc": "Idea to production: frontend, backend, database, deployment." },
-    { "name": "Mobile apps", "desc": "iOS & Android — built, shipped and live on both stores." },
+    { "name": "Mobile apps", "desc": "iOS & Android: built, shipped and live on both stores." },
     { "name": "AI integration", "desc": "RAG systems, chatbots, LLM-powered features, automation." },
     { "name": "SEO & launch", "desc": "Google indexing, first-page ranking, mail and DNS done right." }
   ],
   "experience": [
     {
       "role": "Senior Software Developer",
-      "org": "MMI Technology Solutions — Kenya (Remote)",
-      "period": "Sep 2025 — Present"
+      "org": "MMI Technology Solutions · Kenya (Remote)",
+      "period": "Sep 2025 - Present"
     },
     {
       "role": "Cursor Ambassador",
-      "org": "Cursor — Community",
-      "period": "Jan 2026 — Present"
+      "org": "Cursor Community",
+      "period": "Jan 2026 - Present"
     },
     {
       "role": "IT Support Specialist (Intern)",
-      "org": "Harar Health Office — 16 hospitals",
-      "period": "Jun — Sep 2024"
+      "org": "Harar Health Office, 16 hospitals",
+      "period": "Jun - Sep 2024"
     }
   ]
 }

@@ -1,10 +1,10 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { motion } from "framer-motion";
 import profile from "../../data/profile.json";
 import { Pad, Label, AppIconBox } from "../ui.jsx";
 import { MailIcon } from "../icons.jsx";
 
-/* B — big CTA */
+/* B: big CTA */
 export function B() {
   return (
     <Pad style={{ justifyContent: "space-between" }}>
@@ -53,7 +53,7 @@ export function B() {
   );
 }
 
-/* A — message form -> mailto */
+/* A: message form -> mailto */
 export function A() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -61,9 +61,9 @@ export function A() {
 
   const send = (e) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Portfolio contact — ${name || "hello"}`);
+    const subject = encodeURIComponent(`Portfolio contact from ${name || "your site"}`);
     const body = encodeURIComponent(
-      `${msg}\n\n—\n${name}${email ? `\n${email}` : ""}`
+      `${msg}\n\n${name}${email ? `\n${email}` : ""}`
     );
     window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
   };
@@ -110,18 +110,19 @@ export function A() {
           onChange={(e) => setMsg(e.target.value)}
         />
         <button
-          className="btn-primary"
+          className="btn-cta"
           type="submit"
-          style={{ width: "100%", padding: "14px", fontSize: "0.92rem" }}
+          style={{ width: "100%", justifyContent: "space-between", fontSize: "0.92rem" }}
         >
-          Send it →
+          Send it
+          <span className="btn-cta-arrow">↗</span>
         </button>
       </form>
     </Pad>
   );
 }
 
-/* C — email in its own horizontal strip */
+/* C: email in its own horizontal strip */
 export function C() {
   return (
     <a href={`mailto:${profile.email}`} style={{ display: "block", height: "100%" }}>
@@ -169,7 +170,7 @@ export function C() {
   );
 }
 
-/* F / G / H — social links as small iOS-style app icons */
+/* F / G / H / D: social links as small iOS-style app icons */
 export function F() {
   return <AppIconBox name="github" url={profile.socials.github} />;
 }
@@ -177,5 +178,8 @@ export function G() {
   return <AppIconBox name="linkedin" url={profile.socials.linkedin} />;
 }
 export function H() {
-  return <AppIconBox name="upwork" url={profile.socials.upwork} />;
+  return <AppIconBox name="instagram" url={profile.socials.instagram} />;
+}
+export function D() {
+  return <AppIconBox name="telegram" url={profile.socials.telegram} />;
 }

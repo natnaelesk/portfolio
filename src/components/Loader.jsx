@@ -86,7 +86,7 @@ export default function Loader({ onDone }) {
           color: "var(--muted)",
         }}
       >
-        {profile.title} — {profile.location.split(",")[0]}
+        {profile.title} · {profile.location.split(",")[0]}
       </motion.p>
     </motion.div>
   );

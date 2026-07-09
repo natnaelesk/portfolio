@@ -1,7 +1,7 @@
-import profile from "../../data/profile.json";
+﻿import profile from "../../data/profile.json";
 import { Pad, Label } from "../ui.jsx";
 
-/* B — heading strip */
+/* B: heading strip */
 export function B() {
   return (
     <Pad
@@ -20,7 +20,7 @@ export function B() {
       >
         Skills &amp; Services<span style={{ color: "var(--accent)" }}>.</span>
       </h2>
-      <Label>What I build with — and what I build for you</Label>
+      <Label>What I build with, and what I build for you</Label>
     </Pad>
   );
 }
@@ -79,7 +79,7 @@ export function G() {
   return <SkillGroup index={3} />;
 }
 
-/* E — services, 2x2 */
+/* E: services, 2x2 */
 export function E() {
   return (
     <Pad style={{ gap: "10px" }}>
@@ -127,7 +127,7 @@ export function E() {
   );
 }
 
-/* H — how I ship */
+/* H: how I ship */
 export function H() {
   return (
     <Pad style={{ justifyContent: "center", gap: "10px" }}>
@@ -140,7 +140,7 @@ export function H() {
           fontWeight: 500,
         }}
       >
-        One engineer, the whole stack — frontend, backend, database, CI/CD, DNS
+        One engineer, the whole stack: frontend, backend, database, CI/CD, DNS
         and mail. Every launch SEO-optimized and{" "}
         <span style={{ color: "var(--accent)" }}>ranking first on Google</span>{" "}
         for its name.

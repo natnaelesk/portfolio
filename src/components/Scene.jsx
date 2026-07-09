@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import BentoGrid from "./BentoGrid.jsx";
 import Beams from "./Beams.jsx";
+import { useIsMobile } from "../hooks.js";
 
 export const SECTIONS = ["Home", "About", "Projects", "Skills", "Contact"];
 
@@ -14,6 +15,7 @@ export default function Scene() {
   const lastMove = useRef(0);
   const wheelAccum = useRef(0);
   const touchStartY = useRef(null);
+  const isMobile = useIsMobile();
 
   const go = useCallback((dir, intensity = 1) => {
     const now = performance.now();
@@ -27,6 +29,9 @@ export default function Scene() {
   }, []);
 
   useEffect(() => {
+    const insideScrollable = (target) =>
+      target?.closest?.(".thin-scroll") || target?.closest?.(".no-scrollbar");
+
     const onWheel = (e) => {
       wheelAccum.current += e.deltaY;
       const intensity = Math.min(3, Math.abs(e.deltaY) / 60);
@@ -44,6 +49,7 @@ export default function Scene() {
     };
     const onTouchMove = (e) => {
       if (touchStartY.current === null) return;
+      if (insideScrollable(e.target)) return;
       const dy = touchStartY.current - e.touches[0].clientY;
       if (Math.abs(dy) > 55) {
         go(dy > 0 ? 1 : -1, 2);
@@ -80,7 +86,7 @@ export default function Scene() {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          padding: "18px 26px",
+          padding: isMobile ? "14px 16px" : "18px 26px",
           zIndex: 50,
           pointerEvents: "none",
         }}
@@ -108,70 +114,50 @@ export default function Scene() {
         </div>
       </header>
 
-      {/* right nav dots */}
-      <nav
-        style={{
-          position: "fixed",
-          right: "22px",
-          top: "50%",
-          transform: "translateY(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "14px",
-          zIndex: 50,
-        }}
-      >
+      {/* side navigator */}
+      <nav className="side-nav" aria-label="Sections">
         {SECTIONS.map((name, i) => (
           <button
             key={name}
             onClick={() => setSection(i)}
             title={name}
-            style={{ display: "flex", alignItems: "center", gap: "8px" }}
+            aria-label={name}
+            className={section === i ? "active" : ""}
           >
-            <motion.span
-              animate={{
-                scale: section === i ? 1 : 0.55,
-                backgroundColor:
-                  section === i ? "var(--accent)" : "rgba(0,0,0,0.18)",
-              }}
-              style={{
-                width: "9px",
-                height: "9px",
-                borderRadius: "50%",
-                display: "block",
-              }}
-            />
+            <span className="pip" />
           </button>
         ))}
       </nav>
 
       <BentoGrid section={section} goTo={setSection} />
 
-      {/* scroll hint */}
-      <motion.div
-        animate={{ opacity: section === 0 ? 1 : 0 }}
-        style={{
-          position: "fixed",
-          bottom: "16px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          fontWeight: 600,
-          fontSize: "0.65rem",
-          letterSpacing: "0.3em",
-          textTransform: "uppercase",
-          color: "var(--muted)",
-          zIndex: 50,
-          pointerEvents: "none",
-        }}
-      >
-        <motion.span
-          animate={{ y: [0, 4, 0] }}
-          transition={{ repeat: Infinity, duration: 1.6 }}
-          style={{ display: "inline-block" }}
+      {/* scroll hint (desktop only, bottom nav lives there on mobile) */}
+      {!isMobile && (
+        <motion.div
+          animate={{ opacity: section === 0 ? 1 : 0 }}
+          style={{
+            position: "fixed",
+            bottom: "16px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            fontWeight: 600,
+            fontSize: "0.65rem",
+            letterSpacing: "0.3em",
+            textTransform: "uppercase",
+            color: "var(--muted)",
+            zIndex: 50,
+            pointerEvents: "none",
+          }}
         >
-          scroll ↓
-        </motion.span>
-      </motion.div>
+          <motion.span
+            animate={{ y: [0, 4, 0] }}
+            transition={{ repeat: Infinity, duration: 1.6 }}
+            style={{ display: "inline-block" }}
+          >
+            scroll ↓
+          </motion.span>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

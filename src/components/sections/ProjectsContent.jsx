@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+﻿import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import data from "../../data/projects.json";
 import images from "../../data/images.json";
@@ -6,13 +6,13 @@ import { Pad, Label, BrowserMockup, PhoneMockup } from "../ui.jsx";
 import {
   GitHubIcon,
   GlobeIcon,
-  AppleIcon,
-  PlayStoreIcon,
+  AppStoreBadge,
+  GooglePlayBadge,
   ArrowIcon,
 } from "../icons.jsx";
 
 /* ---- tiny shared store so the filter boxes (D/F/G/H) and the
-   carousel (C) — separate bento boxes — stay in sync ---- */
+   carousel (C): separate bento boxes: stay in sync ---- */
 let filter = { type: "all", stack: null };
 const listeners = new Set();
 function setFilter(patch) {
@@ -31,7 +31,7 @@ function useFilter() {
 
 const STACKS = ["Full Stack", "Web", "Mobile", "AI", "Backend", "Frontend", "Automation"];
 
-/* B — heading */
+/* B: heading */
 export function B() {
   return (
     <Pad style={{ justifyContent: "center", gap: "4px" }}>
@@ -62,6 +62,8 @@ function TypeFilterBox({ value, label, sub }) {
         animate={{
           backgroundColor: active ? "rgba(0,113,227,0.09)" : "rgba(0,0,0,0)",
         }}
+        whileHover={{ backgroundColor: active ? "rgba(0,113,227,0.13)" : "rgba(0,0,0,0.04)" }}
+        whileTap={{ scale: 0.98 }}
         style={{
           height: "100%",
           display: "flex",
@@ -108,7 +110,7 @@ export function G() {
   return <TypeFilterBox value="production" label="Production" sub={`${n} shipped`} />;
 }
 
-/* H — stack sub-filters, their own row below the type filters */
+/* H: stack sub-filters, their own row below the type filters */
 export function H() {
   const f = useFilter();
   return (
@@ -141,6 +143,7 @@ export function H() {
           return (
             <button
               key={s}
+              className="chip"
               onClick={() => setFilter({ stack: active ? null : s })}
               style={{
                 flexShrink: 0,
@@ -151,7 +154,6 @@ export function H() {
                 border: `1px solid ${active ? "var(--accent)" : "var(--line)"}`,
                 background: active ? "var(--accent)" : "var(--panel-solid)",
                 color: active ? "#fff" : "var(--muted)",
-                transition: "all 0.2s ease",
               }}
             >
               {s}
@@ -229,37 +231,23 @@ function LinkBtn({ href, icon, label, soon, onSoon }) {
 }
 
 function StoreBadge({ kind, href, onSoon }) {
-  const isApple = kind === "appstore";
-  const inner = (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "6px",
-        padding: "6px 11px",
-        borderRadius: "9px",
-        background: "#1d1d1f",
-        color: "#fff",
-        fontSize: "0.62rem",
-        fontWeight: 600,
-        letterSpacing: "0.02em",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-      }}
-    >
-      {isApple ? <AppleIcon size={13} /> : <PlayStoreIcon size={12} />}
-      {isApple ? "App Store" : "Play Store"}
-    </span>
-  );
+  const badge =
+    kind === "appstore" ? (
+      <AppStoreBadge height={30} />
+    ) : (
+      <GooglePlayBadge height={30} />
+    );
+
   if (!href) {
     return (
-      <button onClick={onSoon} style={{ padding: 0 }}>
-        {inner}
+      <button onClick={onSoon} style={{ padding: 0, lineHeight: 0, opacity: 0.92 }}>
+        {badge}
       </button>
     );
   }
   return (
-    <a href={href} target="_blank" rel="noreferrer">
-      {inner}
+    <a href={href} target="_blank" rel="noreferrer" style={{ lineHeight: 0, display: "block" }}>
+      {badge}
     </a>
   );
 }
@@ -312,22 +300,15 @@ function ProjectCard({ p, onSoon }) {
             {p.title}
             <span style={{ color: "var(--muted)", fontWeight: 500, fontSize: "0.78em" }}>
               {" "}
-              — {p.tagline}
+              · {p.tagline}
             </span>
           </h3>
         </div>
         <Toggle on={p.type === "production"} />
       </header>
 
-      {/* mockup */}
-      <div
-        style={{
-          flex: 1,
-          minHeight: 0,
-          paddingLeft: isMobile ? "clamp(70px, 8vw, 120px)" : 0,
-          paddingRight: isMobile ? "clamp(70px, 8vw, 120px)" : 0,
-        }}
-      >
+      {/* mockup: always full width, phones overlay on top of it */}
+      <div style={{ flex: 1, minHeight: 0 }}>
         <BrowserMockup src={shot} alt={p.title} />
       </div>
 
@@ -347,19 +328,19 @@ function ProjectCard({ p, onSoon }) {
         </span>
       </footer>
 
-      {/* phone mockups — iPhone pinned to the left border, Android to the right, straight */}
+      {/* phone mockups overlay on top: iPhone left border, Android right border */}
       {isMobile && (
         <>
           <div
             style={{
               position: "absolute",
-              left: "clamp(12px, 1.4vw, 22px)",
-              bottom: "clamp(66px, 9vh, 92px)",
+              left: "clamp(10px, 1.2vw, 18px)",
+              bottom: "clamp(56px, 8vh, 76px)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "10px",
-              zIndex: 3,
+              gap: "8px",
+              zIndex: 4,
             }}
           >
             {showApp && (
@@ -370,13 +351,13 @@ function ProjectCard({ p, onSoon }) {
           <div
             style={{
               position: "absolute",
-              right: "clamp(12px, 1.4vw, 22px)",
-              bottom: "clamp(66px, 9vh, 92px)",
+              right: "clamp(10px, 1.2vw, 18px)",
+              bottom: "clamp(56px, 8vh, 76px)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "10px",
-              zIndex: 3,
+              gap: "8px",
+              zIndex: 4,
             }}
           >
             {showPlay && (
@@ -390,7 +371,7 @@ function ProjectCard({ p, onSoon }) {
   );
 }
 
-/* C — the carousel wrapper */
+/* C: the carousel wrapper */
 export function C() {
   const f = useFilter();
   const trackRef = useRef(null);
@@ -484,10 +465,12 @@ export function C() {
         )}
       </div>
 
-      {/* prev / next controls — vertically centered on the edges */}
+      {/* prev / next controls, vertically centered on the edges */}
       {[-1, 1].map((dir) => (
         <button
           key={dir}
+          className="icon-btn"
+          aria-label={dir === 1 ? "Next project" : "Previous project"}
           onClick={() => jump(dir)}
           style={{
             position: "absolute",
@@ -555,7 +538,7 @@ export function C() {
               boxShadow: "0 8px 24px rgba(0,0,0,0.2)",
             }}
           >
-            Launching soon — stay tuned
+            Launching soon, stay tuned
           </motion.div>
         )}
       </AnimatePresence>

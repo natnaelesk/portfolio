@@ -24,6 +24,22 @@ export function UpworkIcon({ size = 22 }) {
   );
 }
 
+export function InstagramIcon({ size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
+    </svg>
+  );
+}
+
+export function TelegramIcon({ size = 22 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 448 512" fill="currentColor" aria-hidden>
+      <path d="M446.7 98.6 379.1 417.4c-5.1 22.5-18.4 28.1-37.3 17.5l-103-75.9-49.7 47.8c-5.5 5.5-10.1 10.1-20.7 10.1l7.4-104.9 190.9-172.5c8.3-7.4-1.8-11.5-12.9-4.1L117.8 284 16.2 252.2c-22.1-6.9-22.5-22.1 4.6-32.7L418.2 66.4c18.4-6.9 34.5 4.1 28.5 32.2z" />
+    </svg>
+  );
+}
+
 export function GlobeIcon({ size = 22 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden>
@@ -75,6 +91,69 @@ export function MailIcon({ size = 20 }) {
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden>
       <rect x="2.5" y="4.5" width="19" height="15" rx="3" />
       <path d="m3.5 6.5 8.5 7 8.5-7" />
+    </svg>
+  );
+}
+
+/* Official-style promotional store badges */
+export function AppStoreBadge({ height = 40 }) {
+  return (
+    <svg
+      height={height}
+      viewBox="0 0 120 40"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Download on the App Store"
+      role="img"
+    >
+      <rect width="120" height="40" rx="6" fill="#000" />
+      <path
+        fill="#fff"
+        d="M24.8 20.3c-.02-2.17 1.77-3.21 1.85-3.26-1.01-1.47-2.58-1.67-3.14-1.69-1.33-.14-2.6.78-3.27.78-.68 0-1.72-.76-2.83-.74-1.46.02-2.8.85-3.55 2.16-1.52 2.63-.39 6.52 1.09 8.66.72 1.04 1.58 2.21 2.71 2.17 1.09-.04 1.5-.7 2.82-.7 1.32 0 1.69.7 2.84.68 1.17-.02 1.92-1.06 2.63-2.1.83-1.21 1.17-2.38 1.19-2.44-.03-.01-2.28-.87-2.3-3.46zm-2.15-6.38c.6-.73 1-1.74.89-2.75-.86.04-1.9.57-2.52 1.3-.56.65-1.05 1.69-.92 2.69.97.08 1.97-.49 2.55-1.24z"
+      />
+      <text x="44" y="14" fill="#fff" fontSize="7" fontFamily="system-ui,sans-serif">
+        Download on the
+      </text>
+      <text x="44" y="28" fill="#fff" fontSize="13" fontWeight="600" fontFamily="system-ui,sans-serif">
+        App Store
+      </text>
+    </svg>
+  );
+}
+
+export function GooglePlayBadge({ height = 40 }) {
+  return (
+    <svg
+      height={height}
+      viewBox="0 0 135 40"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-label="Get it on Google Play"
+      role="img"
+    >
+      <rect width="135" height="40" rx="6" fill="#000" />
+      <g transform="translate(9 8)">
+        <path
+          fill="#00A0FF"
+          d="M1.57.92A2 2 0 0 0 1 2.32v19.36a2 2 0 0 0 .57 1.4l.08.08L12.5 12.31v-.26L1.65.84z"
+        />
+        <path
+          fill="#FFCE00"
+          d="m16.12 15.93-3.62-3.62v-.26l3.62-3.61.08.05 4.28 2.43c1.22.7 1.22 1.83 0 2.53l-4.28 2.43z"
+        />
+        <path
+          fill="#F44336"
+          d="m16.2 15.88-3.7-3.7L1.57 23.08c.4.43 1.07.48 1.82.06l12.81-7.26"
+        />
+        <path
+          fill="#00F076"
+          d="M16.2 8.48 3.39.86C2.64.44 1.97.49 1.57.92l10.93 10.93z"
+        />
+      </g>
+      <text x="42" y="15" fill="#fff" fontSize="6.5" fontFamily="system-ui,sans-serif" letterSpacing="0.5">
+        GET IT ON
+      </text>
+      <text x="42" y="29" fill="#fff" fontSize="12.5" fontWeight="600" fontFamily="system-ui,sans-serif">
+        Google Play
+      </text>
     </svg>
   );
 }

@@ -2,84 +2,95 @@ import profile from "../../data/profile.json";
 import images from "../../data/images.json";
 import { Pad, Label, ImageOrPlaceholder } from "../ui.jsx";
 
-/* renders ==text== as a marker highlight */
+/* ==text== renders as a yellow marker sweep, __text__ as a hand-drawn pen line */
 function Highlight({ text }) {
-  return text
-    .split(/==([^=]+)==/g)
-    .map((part, i) =>
-      i % 2 ? (
+  return text.split(/(==[^=]+==|__[^_]+__)/g).map((part, i) => {
+    if (part.startsWith("==") && part.endsWith("==")) {
+      return (
         <mark className="marker" key={i}>
-          {part}
+          {part.slice(2, -2)}
         </mark>
-      ) : (
-        <span key={i}>{part}</span>
-      )
-    );
+      );
+    }
+    if (part.startsWith("__") && part.endsWith("__")) {
+      return (
+        <span className="sketch" key={i}>
+          {part.slice(2, -2)}
+        </span>
+      );
+    }
+    return <span key={i}>{part}</span>;
+  });
 }
 
-const CHIP_TINTS = [
-  { bg: "rgba(0,113,227,0.1)", color: "#0071e3" },
-  { bg: "rgba(175,82,222,0.1)", color: "#af52de" },
-  { bg: "rgba(255,149,0,0.13)", color: "#b25000" },
-  { bg: "rgba(48,209,88,0.13)", color: "#1d7a3a" },
-];
-
-/* B — heading strip with stat chips bottom-right */
+/* B: heading strip. Title centered left, subtitle top right, stat chips bottom right. */
 export function B() {
+  const pad = "clamp(14px, 2vw, 26px)";
+
   return (
-    <Pad
-      style={{
-        flexDirection: "row",
-        alignItems: "flex-end",
-        justifyContent: "space-between",
-        gap: "20px",
-      }}
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-        <h2
-          style={{
-            fontSize: "clamp(1.5rem, 2.6vw, 2.4rem)",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-          }}
-        >
-          About<span style={{ color: "var(--accent)" }}>.</span>
-        </h2>
-        <Label>Builder · Engineer · Cursor Ambassador</Label>
-      </div>
+    <div style={{ height: "100%", position: "relative", minHeight: 0 }}>
+      <Label
+        style={{
+          position: "absolute",
+          top: pad,
+          right: pad,
+          fontSize: "clamp(0.6rem, 0.75vw, 0.72rem)",
+        }}
+      >
+        Builder · Engineer · Cursor Ambassador
+      </Label>
+
+      <h2
+        style={{
+          position: "absolute",
+          left: pad,
+          top: "50%",
+          transform: "translateY(-50%)",
+          fontSize: "clamp(1.5rem, 2.6vw, 2.4rem)",
+          fontWeight: 700,
+          letterSpacing: "-0.03em",
+        }}
+      >
+        About<span style={{ color: "var(--accent)" }}>.</span>
+      </h2>
+
       <div
         style={{
+          position: "absolute",
+          bottom: pad,
+          right: pad,
           display: "flex",
           gap: "8px",
           flexWrap: "wrap",
           justifyContent: "flex-end",
+          maxWidth: "72%",
         }}
       >
-        {profile.stats.map((s, i) => {
-          const tint = CHIP_TINTS[i % CHIP_TINTS.length];
-          return (
-            <span
-              key={s.label}
-              style={{
-                padding: "8px 14px",
-                borderRadius: "12px",
-                background: tint.bg,
-                color: tint.color,
-                fontSize: "clamp(0.7rem, 0.9vw, 0.82rem)",
-                fontWeight: 650,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {s.value} {s.label}
-            </span>
-          );
-        })}
+        {profile.stats.map((s) => (
+          <span
+            key={s.label}
+            className="chip"
+            style={{
+              padding: "7px 13px",
+              borderRadius: "10px",
+              background: "var(--panel-2)",
+              border: "1px solid var(--line)",
+              color: "var(--muted)",
+              fontSize: "clamp(0.66rem, 0.85vw, 0.78rem)",
+              fontWeight: 550,
+              whiteSpace: "nowrap",
+            }}
+          >
+            <span style={{ color: "var(--text)", fontWeight: 650 }}>{s.value}</span>{" "}
+            {s.label}
+          </span>
+        ))}
       </div>
-    </Pad>
+    </div>
   );
 }
 
-/* A — portrait */
+/* A: portrait */
 export function A() {
   return (
     <ImageOrPlaceholder
@@ -90,90 +101,138 @@ export function A() {
   );
 }
 
-/* C — the story, free and open, with marker highlights */
+/* C: the story with clear hierarchy. Lead, body, then what sets me apart. */
 export function C() {
   return (
     <Pad
       className="thin-scroll"
-      style={{ overflowY: "auto", gap: "clamp(14px, 2vh, 24px)", justifyContent: "center" }}
+      style={{ overflowY: "auto", gap: "clamp(12px, 1.8vh, 20px)" }}
       onWheel={(e) => {
         const el = e.currentTarget;
         if (el.scrollHeight > el.clientHeight) e.stopPropagation();
       }}
     >
+      <Label>Who I am</Label>
+
+      <p
+        style={{
+          fontSize: "clamp(1.05rem, 1.6vw, 1.5rem)",
+          lineHeight: 1.4,
+          fontWeight: 650,
+          letterSpacing: "-0.015em",
+          color: "var(--text)",
+          maxWidth: "30ch",
+        }}
+      >
+        {profile.aboutLead}
+      </p>
+
       {profile.about.map((p, i) => (
         <p
           key={i}
           style={{
-            fontSize:
-              i === 0
-                ? "clamp(1.02rem, 1.55vw, 1.45rem)"
-                : "clamp(0.9rem, 1.2vw, 1.12rem)",
+            fontSize: "clamp(0.85rem, 1.05vw, 1rem)",
             lineHeight: 1.65,
-            color: i === 0 ? "var(--text)" : "#4a4a4f",
-            fontWeight: i === 0 ? 550 : 450,
-            maxWidth: "56ch",
+            color: "#4a4a4f",
+            fontWeight: 450,
+            maxWidth: "58ch",
           }}
         >
-          <Highlight text={p} />
+          {p}
         </p>
       ))}
+
+      <div style={{ marginTop: "clamp(2px, 0.6vh, 8px)" }}>
+        <Label style={{ display: "block", marginBottom: "10px" }}>
+          What sets me apart
+        </Label>
+        <div style={{ display: "flex", flexDirection: "column", gap: "9px" }}>
+          {profile.differentiators.map((d, i) => (
+            <div
+              key={i}
+              style={{
+                display: "flex",
+                alignItems: "baseline",
+                gap: "10px",
+                fontSize: "clamp(0.85rem, 1.05vw, 1rem)",
+                lineHeight: 1.6,
+                fontWeight: 500,
+                color: "var(--text)",
+                maxWidth: "58ch",
+              }}
+            >
+              <span style={{ color: "var(--accent)", flexShrink: 0, fontWeight: 700 }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span>
+                <Highlight text={d} />
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
     </Pad>
   );
 }
 
-/* E — experience, its own colored panel */
+/* E: experience, clean minimal panel */
 export function E() {
   return (
     <Pad
       className="thin-scroll"
       style={{
         overflowY: "auto",
-        gap: "4px",
-        background: "linear-gradient(165deg, #0a84ff 0%, #0055b8 100%)",
-        color: "#fff",
+        gap: "2px",
+        background: "var(--panel-2)",
       }}
       onWheel={(e) => {
         const el = e.currentTarget;
         if (el.scrollHeight > el.clientHeight) e.stopPropagation();
       }}
     >
-      <Label style={{ color: "rgba(255,255,255,0.75)", marginBottom: "10px" }}>
-        Experience
-      </Label>
-      {profile.experience.map((e) => (
+      <Label style={{ marginBottom: "12px" }}>Experience</Label>
+      {profile.experience.map((e, i) => (
         <div
           key={e.role}
           style={{
-            padding: "12px 0",
-            borderBottom: "1px solid rgba(255,255,255,0.18)",
+            padding: "14px 0",
+            borderBottom:
+              i < profile.experience.length - 1 ? "1px solid var(--line)" : "none",
           }}
         >
-          <div style={{ fontWeight: 650, fontSize: "0.92rem" }}>{e.role}</div>
           <div
             style={{
-              fontSize: "0.76rem",
-              color: "rgba(255,255,255,0.72)",
-              marginTop: "4px",
-              lineHeight: 1.4,
+              display: "flex",
+              alignItems: "baseline",
+              justifyContent: "space-between",
+              gap: "10px",
+            }}
+          >
+            <div style={{ fontWeight: 650, fontSize: "0.88rem", lineHeight: 1.35 }}>
+              {e.role}
+            </div>
+            <span
+              style={{
+                fontSize: "0.66rem",
+                fontWeight: 550,
+                color: "var(--muted)",
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+              }}
+            >
+              {e.period}
+            </span>
+          </div>
+          <div
+            style={{
+              fontSize: "0.74rem",
+              color: "var(--muted)",
+              marginTop: "5px",
+              lineHeight: 1.45,
             }}
           >
             {e.org}
           </div>
-          <span
-            style={{
-              display: "inline-block",
-              marginTop: "7px",
-              padding: "3px 10px",
-              borderRadius: "999px",
-              background: "rgba(255,255,255,0.16)",
-              fontSize: "0.66rem",
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-            }}
-          >
-            {e.period}
-          </span>
         </div>
       ))}
     </Pad>

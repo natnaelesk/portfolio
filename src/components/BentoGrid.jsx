@@ -4,6 +4,7 @@ import * as About from "./sections/AboutContent.jsx";
 import * as Projects from "./sections/ProjectsContent.jsx";
 import * as Skills from "./sections/SkillsContent.jsx";
 import * as Contact from "./sections/ContactContent.jsx";
+import { useIsMobile } from "../hooks.js";
 
 /*
  * Eight persistent boxes (A-H) morph between sections: same DOM nodes,
@@ -14,51 +15,51 @@ import * as Contact from "./sections/ContactContent.jsx";
  * null = box hidden in that section.
  */
 
-// small square app-icon box (social links)
+// social link boxes: stretch equally across the row width
 const ICON = {
+  width: "100%",
   height: "100%",
   maxHeight: "84px",
-  width: "auto",
-  aspectRatio: "1 / 1",
+  minWidth: 0,
   alignSelf: "center",
-  justifySelf: "start",
+  justifySelf: "stretch",
 };
 
 const LAYOUTS = [
-  // 0 — Hero
+  // 0 Hero
   {
-    B: [1, 8, 1, 8], // big intro (taller)
-    A: [8, 13, 1, 8], // portrait (stretches, more visible)
-    D: { place: [8, 13, 8, 9], style: { maxHeight: "110px", alignSelf: "center" } }, // availability, capped
+    B: [1, 8, 1, 8], // big intro
+    A: [8, 13, 1, 8], // portrait
+    D: { place: [9, 13, 8, 9], style: { maxHeight: "110px", alignSelf: "center" } }, // availability
     F: { place: [1, 3, 8, 9], style: ICON }, // GitHub
     G: { place: [3, 5, 8, 9], style: ICON }, // LinkedIn
-    H: { place: [5, 7, 8, 9], style: ICON }, // Upwork
+    H: { place: [5, 7, 8, 9], style: ICON }, // Instagram
+    E: { place: [7, 9, 8, 9], style: ICON }, // Telegram
     C: null,
-    E: null,
   },
-  // 1 — About
+  // 1 About
   {
     B: [1, 13, 1, 3], // heading strip + stat chips
     A: [1, 4, 3, 9], // portrait
-    C: [4, 9, 3, 9], // story, room to breathe
-    E: [9, 13, 3, 9], // experience (colored)
+    C: [4, 9, 3, 9], // story
+    E: [9, 13, 3, 9], // experience
     D: null,
     F: null,
     G: null,
     H: null,
   },
-  // 2 — Projects
+  // 2 Projects
   {
     B: [1, 4, 1, 3], // heading
-    D: [4, 7, 1, 2], // filter: all (wide + short)
+    D: [4, 7, 1, 2], // filter: all
     F: [7, 10, 1, 2], // filter: personal
     G: [10, 13, 1, 2], // filter: production
-    H: [4, 13, 2, 3], // stack chips, own row below
+    H: [4, 13, 2, 3], // stack chips
     C: [1, 13, 3, 9], // carousel wrapper
     A: null,
     E: null,
   },
-  // 3 — Skills & Services
+  // 3 Skills & Services
   {
     B: [1, 13, 1, 3], // heading strip
     C: [1, 4, 3, 6], // frontend
@@ -66,18 +67,77 @@ const LAYOUTS = [
     F: [7, 10, 3, 6], // ai/ml
     G: [10, 13, 3, 6], // data & infra
     E: [1, 8, 6, 9], // services
-    H: [8, 13, 6, 9], // note / how I ship
+    H: [8, 13, 6, 9], // how I ship
     A: null,
   },
-  // 4 — Contact
+  // 4 Contact
   {
-    B: [1, 8, 1, 6], // big CTA
-    A: [8, 13, 1, 9], // form
-    C: [1, 8, 6, 7], // email strip
+    B: [1, 9, 1, 6], // big CTA
+    A: [9, 13, 1, 9], // form
+    C: [1, 9, 6, 7], // email strip
     F: { place: [1, 3, 7, 9], style: ICON }, // GitHub
     G: { place: [3, 5, 7, 9], style: ICON }, // LinkedIn
-    H: { place: [5, 7, 7, 9], style: ICON }, // Upwork
+    H: { place: [5, 7, 7, 9], style: ICON }, // Instagram
+    D: { place: [7, 9, 7, 9], style: ICON }, // Telegram
+    E: null,
+  },
+];
+
+// Single-column flow for phones: full-width rows, natural order.
+const LAYOUTS_MOBILE = [
+  // 0 Hero
+  {
+    B: [1, 13, 1, 5],
+    A: [1, 13, 5, 7],
+    D: { place: [1, 13, 7, 8], style: { maxHeight: "84px", alignSelf: "center" } },
+    F: { place: [1, 4, 8, 9], style: ICON },
+    G: { place: [4, 7, 8, 9], style: ICON },
+    H: { place: [7, 10, 8, 9], style: ICON },
+    E: { place: [10, 13, 8, 9], style: ICON },
+    C: null,
+  },
+  // 1 About
+  {
+    B: [1, 13, 1, 3],
+    C: [1, 13, 3, 7],
+    E: [1, 13, 7, 9],
+    A: null,
     D: null,
+    F: null,
+    G: null,
+    H: null,
+  },
+  // 2 Projects
+  {
+    B: [1, 13, 1, 2],
+    D: [1, 5, 2, 3],
+    F: [5, 9, 2, 3],
+    G: [9, 13, 2, 3],
+    H: [1, 13, 3, 4],
+    C: [1, 13, 4, 9],
+    A: null,
+    E: null,
+  },
+  // 3 Skills & Services
+  {
+    B: [1, 13, 1, 2],
+    C: [1, 7, 2, 4],
+    D: [7, 13, 2, 4],
+    F: [1, 7, 4, 6],
+    G: [7, 13, 4, 6],
+    E: [1, 13, 6, 9],
+    H: null,
+    A: null,
+  },
+  // 4 Contact
+  {
+    B: [1, 13, 1, 3],
+    C: [1, 13, 3, 4],
+    A: [1, 13, 4, 8],
+    F: { place: [1, 4, 8, 9], style: ICON },
+    G: { place: [4, 7, 8, 9], style: ICON },
+    H: { place: [7, 10, 8, 9], style: ICON },
+    D: { place: [10, 13, 8, 9], style: ICON },
     E: null,
   },
 ];
@@ -85,8 +145,8 @@ const LAYOUTS = [
 // Softer, heavier spring = calmer, smoother morphs.
 const SPRING = { type: "spring", stiffness: 120, damping: 26, mass: 1 };
 
-function Box({ id, section, children }) {
-  const entry = LAYOUTS[section][id];
+function Box({ id, section, layouts, children }) {
+  const entry = layouts[section][id];
   const place = Array.isArray(entry) ? entry : entry?.place;
   const override = Array.isArray(entry) ? undefined : entry?.style;
   const visible = !!place;
@@ -136,6 +196,8 @@ function Box({ id, section, children }) {
 const BOX_IDS = ["B", "A", "C", "D", "E", "F", "G", "H"];
 
 export default function BentoGrid({ section, goTo }) {
+  const isMobile = useIsMobile();
+  const layouts = isMobile ? LAYOUTS_MOBILE : LAYOUTS;
   const C = [Hero, About, Projects, Skills, Contact][section];
 
   return (
@@ -145,9 +207,10 @@ export default function BentoGrid({ section, goTo }) {
         display: "grid",
         gridTemplateColumns: "repeat(12, 1fr)",
         gridTemplateRows: "repeat(8, 1fr)",
-        gap: "12px",
-        padding:
-          "clamp(54px, 7vh, 66px) clamp(38px, 4vw, 56px) clamp(16px, 3vh, 34px) clamp(14px, 2vw, 28px)",
+        gap: isMobile ? "8px" : "12px",
+        padding: isMobile
+          ? "52px 12px 44px 12px"
+          : "clamp(54px, 7vh, 66px) clamp(38px, 4vw, 56px) clamp(16px, 3vh, 34px) clamp(14px, 2vw, 28px)",
         position: "relative",
         zIndex: 1,
       }}
@@ -155,7 +218,7 @@ export default function BentoGrid({ section, goTo }) {
       {BOX_IDS.map((id) => {
         const Content = C[id];
         return (
-          <Box key={id} id={id} section={section}>
+          <Box key={id} id={id} section={section} layouts={layouts}>
             {Content ? <Content goTo={goTo} /> : null}
           </Box>
         );

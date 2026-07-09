@@ -1,16 +1,16 @@
-{
+﻿{
   "_comment": "links: web null = hide button. appstore/playstore empty string '' = show button with 'Soon' popup, null = hide. Fill live links as they release.",
   "projects": [
     {
       "id": "suuq",
       "title": "Suuq",
-      "tagline": "Somali marketplace — web, iOS & Android",
-      "description": "Full marketplace platform for the Somali market: listings, search, chat between buyers and sellers. Built solo end-to-end — web app, mobile apps (both stores), backend, database, CI/CD and DNS management.",
+      "tagline": "Somali marketplace · web, iOS & Android",
+      "description": "Full marketplace platform for the Somali market: listings, search, chat between buyers and sellers. Built solo end-to-end: web app, mobile apps (both stores), backend, database, CI/CD and DNS management.",
       "type": "production",
       "categories": ["Full Stack", "Mobile", "Web"],
       "tech": ["React", "React Native", "Node.js", "PostgreSQL", "CI/CD"],
       "year": "2026",
-      "role": "Solo engineer — everything",
+      "role": "Solo engineer, everything",
       "links": {
         "web": null,
         "github": "https://github.com/natnaelesk/suuq-mobile-app",
@@ -27,7 +27,7 @@
       "categories": ["Full Stack", "Web"],
       "tech": ["React", "Node.js", "PostgreSQL", "CI/CD"],
       "year": "2026",
-      "role": "Solo engineer — everything",
+      "role": "Solo engineer, everything",
       "links": {
         "web": null,
         "github": "https://github.com/mmigithubacc/globalbizdir",
@@ -39,7 +39,7 @@
       "id": "hawkeye",
       "title": "Hawkeye Africa",
       "tagline": "AI-powered civic accountability platform",
-      "description": "Africa's first ward-level cartographic accountability platform — 47 counties, 1,450 wards, 10,000+ projects tracked for the Kenyan government. I built backend services and integrations as part of the team.",
+      "description": "Africa's first ward-level cartographic accountability platform: 47 counties, 1,450 wards, 10,000+ projects tracked for the Kenyan government. I built backend services and integrations as part of the team.",
       "type": "production",
       "categories": ["Web", "AI", "Backend"],
       "tech": ["Backend", "Integrations", "Geospatial", "AI"],
@@ -55,8 +55,8 @@
     {
       "id": "agunta",
       "title": "Agunta Construction",
-      "tagline": "Construction company platform — Uganda",
-      "description": "Client web app for a multinational construction company: project showcase with self-serve content management, proper mail service, DNS setup and full SEO — ranks first on Google for its name.",
+      "tagline": "Construction company platform · Uganda",
+      "description": "Client web app for a multinational construction company: project showcase with self-serve content management, proper mail service, DNS setup and full SEO. Ranks first on Google for its name.",
       "type": "production",
       "categories": ["Web", "Frontend"],
       "tech": ["React", "Supabase", "SEO", "Mail service"],
@@ -78,7 +78,7 @@
       "categories": ["AI", "Full Stack"],
       "tech": ["React", "Node.js", "RAG", "Vector DB", "Embeddings"],
       "year": "2025",
-      "role": "Creator — team of 5",
+      "role": "Creator, team of 5",
       "links": {
         "web": null,
         "github": "https://github.com/natnaelesk/hiriya_ChatBot",
@@ -107,7 +107,7 @@
       "id": "eth-x01",
       "title": "ETH-X01",
       "tagline": "DSA community platform",
-      "description": "Community platform for LeetCode-style coding challenges, Python lessons and leaderboards — built for the Ethiopian dev community I mentor.",
+      "description": "Community platform for LeetCode-style coding challenges, Python lessons and leaderboards, built for the Ethiopian dev community I mentor.",
       "type": "personal",
       "categories": ["Web", "Full Stack"],
       "tech": ["React", "Node.js", "PostgreSQL"],

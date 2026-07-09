@@ -1,15 +1,15 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import profile from "../../data/profile.json";
 import images from "../../data/images.json";
 import { Pad, Label, ImageOrPlaceholder, AppIconBox } from "../ui.jsx";
 import { ArrowIcon } from "../icons.jsx";
 
-/* B — big intro (tall) */
+/* B: big intro (tall) */
 export function B({ goTo }) {
   return (
     <Pad style={{ justifyContent: "space-between" }}>
       <Label style={{ fontSize: "clamp(0.68rem, 0.8vw, 0.82rem)" }}>
-        Full-stack engineer — {profile.location}
+        Full-stack engineer · {profile.location}
       </Label>
       <div>
         <h1
@@ -39,9 +39,12 @@ export function B({ goTo }) {
           {profile.intro}
         </p>
       </div>
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-        <button className="btn-primary" onClick={() => goTo(2)}>
-          See the work <ArrowIcon size={15} />
+      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", alignItems: "center" }}>
+        <button className="btn-cta" onClick={() => goTo(2)}>
+          See the work
+          <span className="btn-cta-arrow">
+            <ArrowIcon size={15} dir="right" />
+          </span>
         </button>
         <button className="btn-ghost" onClick={() => goTo(4)}>
           Get in touch
@@ -51,7 +54,7 @@ export function B({ goTo }) {
   );
 }
 
-/* A — portrait, stretches with the screen */
+/* A: portrait, stretches with the screen */
 export function A() {
   return (
     <div style={{ height: "100%", position: "relative" }}>
@@ -76,7 +79,7 @@ export function A() {
   );
 }
 
-/* D — availability strip (capped height, never stretches) */
+/* D: availability strip (capped height, never stretches) */
 export function D({ goTo }) {
   return (
     <button onClick={() => goTo(4)} style={{ width: "100%", height: "100%", textAlign: "left" }}>
@@ -117,7 +120,7 @@ export function D({ goTo }) {
   );
 }
 
-/* F / G / H — social links as small iOS-style app icons */
+/* F / G / H / E: social links as small iOS-style app icons */
 export function F() {
   return <AppIconBox name="github" url={profile.socials.github} />;
 }
@@ -125,5 +128,8 @@ export function G() {
   return <AppIconBox name="linkedin" url={profile.socials.linkedin} />;
 }
 export function H() {
-  return <AppIconBox name="upwork" url={profile.socials.upwork} />;
+  return <AppIconBox name="instagram" url={profile.socials.instagram} />;
+}
+export function E() {
+  return <AppIconBox name="telegram" url={profile.socials.telegram} />;
 }

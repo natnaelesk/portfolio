@@ -1,7 +1,7 @@
 /* Shared pieces: padding wrapper, labels, image placeholder, device mockups,
    app-icon social boxes. */
 import { motion } from "framer-motion";
-import { GitHubIcon, LinkedInIcon, UpworkIcon } from "./icons.jsx";
+import { GitHubIcon, LinkedInIcon, InstagramIcon, TelegramIcon } from "./icons.jsx";
 
 export function Pad({ children, style, className, ...rest }) {
   return (
@@ -39,13 +39,13 @@ export function Label({ children, style }) {
   );
 }
 
-export function ImageOrPlaceholder({ src, alt, label }) {
+export function ImageOrPlaceholder({ src, alt, label, objectFit = "cover" }) {
   if (src) {
     return (
       <img
         src={src}
         alt={alt}
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        style={{ width: "100%", height: "100%", objectFit, display: "block" }}
       />
     );
   }
@@ -87,7 +87,11 @@ export function ImageOrPlaceholder({ src, alt, label }) {
 const BRANDS = {
   github: { Icon: GitHubIcon, bg: "#1d1d1f" },
   linkedin: { Icon: LinkedInIcon, bg: "#0a66c2" },
-  upwork: { Icon: UpworkIcon, bg: "#14a800" },
+  instagram: {
+    Icon: InstagramIcon,
+    bg: "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
+  },
+  telegram: { Icon: TelegramIcon, bg: "#229ED9" },
 };
 
 export function AppIconBox({ name, url }) {
@@ -118,120 +122,170 @@ export function AppIconBox({ name, url }) {
 
 /* ---- device mockups (pure CSS) ---- */
 
-/* Safari-style browser frame that fills its parent. */
+/* Safari-style browser frame, viewport locked to 16:9 (1920x1080). */
 export function BrowserMockup({ src, alt }) {
+  const CHROME = 34;
+
   return (
     <div
       style={{
+        width: "100%",
         height: "100%",
         display: "flex",
-        flexDirection: "column",
-        borderRadius: "14px",
-        overflow: "hidden",
-        border: "1px solid var(--line)",
-        background: "#fff",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: 0,
       }}
     >
       <div
         style={{
+          width: "100%",
+          maxHeight: "100%",
           display: "flex",
-          alignItems: "center",
-          gap: "10px",
-          padding: "8px 12px",
-          background: "#f0f0f2",
-          borderBottom: "1px solid var(--line)",
-          flexShrink: 0,
+          flexDirection: "column",
+          borderRadius: "14px",
+          overflow: "hidden",
+          border: "1px solid var(--line)",
+          background: "#fff",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.08)",
         }}
       >
-        <span style={{ display: "flex", gap: "5px" }}>
-          {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
-            <span
-              key={c}
-              style={{ width: "9px", height: "9px", borderRadius: "50%", background: c }}
-            />
-          ))}
-        </span>
-        <span
+        <div
           style={{
-            flex: 1,
-            maxWidth: "320px",
-            margin: "0 auto",
-            background: "#fff",
-            borderRadius: "7px",
-            padding: "3px 12px",
-            fontSize: "0.62rem",
-            fontWeight: 500,
-            color: "var(--muted)",
-            textAlign: "center",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            border: "1px solid var(--line)",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            height: CHROME,
+            padding: "0 12px",
+            background: "#f0f0f2",
+            borderBottom: "1px solid var(--line)",
+            flexShrink: 0,
           }}
         >
-          {(alt || "project").toLowerCase().replace(/\s+/g, "")}.com
-        </span>
-        <span style={{ width: "33px" }} />
-      </div>
-      <div style={{ flex: 1, minHeight: 0 }}>
-        <ImageOrPlaceholder src={src} alt={alt} label="screenshot soon" />
+          <span style={{ display: "flex", gap: "5px" }}>
+            {["#ff5f57", "#febc2e", "#28c840"].map((c) => (
+              <span
+                key={c}
+                style={{ width: "9px", height: "9px", borderRadius: "50%", background: c }}
+              />
+            ))}
+          </span>
+          <span
+            style={{
+              flex: 1,
+              maxWidth: "320px",
+              margin: "0 auto",
+              background: "#fff",
+              borderRadius: "7px",
+              padding: "3px 12px",
+              fontSize: "0.62rem",
+              fontWeight: 500,
+              color: "var(--muted)",
+              textAlign: "center",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              border: "1px solid var(--line)",
+            }}
+          >
+            {(alt || "project").toLowerCase().replace(/\s+/g, "")}.com
+          </span>
+          <span style={{ width: "33px" }} />
+        </div>
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "#f5f5f7",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              maxWidth: "100%",
+              maxHeight: "100%",
+              aspectRatio: "16 / 9",
+              margin: "auto",
+              background: "#fff",
+            }}
+          >
+            <ImageOrPlaceholder
+              src={src}
+              alt={alt}
+              label="screenshot soon"
+              objectFit="contain"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-/* Small phone frame — iPhone (dynamic island) or Android (punch-hole). */
+/* iPhone 11 (414x896) or Android: same size, screenshot fills the screen. */
 export function PhoneMockup({ kind = "iphone", src, alt }) {
   const iphone = kind === "iphone";
+  const w = "clamp(64px, 7.5vw, 104px)";
+
   return (
     <div
       style={{
-        width: "clamp(46px, 4.6vw, 66px)",
-        aspectRatio: "9 / 19",
-        borderRadius: iphone ? "clamp(10px, 1vw, 15px)" : "clamp(8px, 0.9vw, 12px)",
+        width: w,
+        aspectRatio: "414 / 896",
+        borderRadius: iphone ? "16%" : "13%",
         border: "3px solid #1d1d1f",
         background: "#1d1d1f",
         position: "relative",
         overflow: "hidden",
-        boxShadow: "0 8px 22px rgba(0,0,0,0.18)",
+        boxShadow: "0 10px 24px rgba(0, 0, 0, 0.2)",
         flexShrink: 0,
       }}
     >
       <div
         style={{
           position: "absolute",
-          inset: 0,
-          borderRadius: "inherit",
+          inset: "2.5px",
+          borderRadius: iphone ? "13.5%" : "10.5%",
           overflow: "hidden",
+          background: "#fff",
         }}
       >
-        <ImageOrPlaceholder src={src} alt={alt} label="" />
+        <ImageOrPlaceholder src={src} alt={alt} label="" objectFit="cover" />
       </div>
       {iphone ? (
         <span
           style={{
             position: "absolute",
-            top: "4px",
+            top: 0,
             left: "50%",
             transform: "translateX(-50%)",
-            width: "34%",
-            height: "5px",
-            borderRadius: "999px",
+            width: "44%",
+            height: "3.8%",
+            minHeight: "10px",
             background: "#1d1d1f",
+            borderBottomLeftRadius: "12px",
+            borderBottomRightRadius: "12px",
+            zIndex: 2,
           }}
         />
       ) : (
         <span
           style={{
             position: "absolute",
-            top: "4px",
+            top: "2.2%",
             left: "50%",
             transform: "translateX(-50%)",
-            width: "5px",
-            height: "5px",
+            width: "3.8%",
+            minWidth: "7px",
+            aspectRatio: "1",
             borderRadius: "50%",
             background: "#1d1d1f",
+            zIndex: 2,
+            boxShadow: "0 0 0 2px #0a0a0a",
           }}
         />
       )}
