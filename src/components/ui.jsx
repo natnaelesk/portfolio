@@ -1,7 +1,9 @@
 /* Shared pieces: padding wrapper, labels, image placeholder, device mockups,
    app-icon social boxes. */
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { GitHubIcon, LinkedInIcon, InstagramIcon, TelegramIcon } from "./icons.jsx";
+import { GitHubIcon, LinkedInIcon, WhatsAppIcon, GmailIcon } from "./icons.jsx";
+import profile from "../data/profile.json";
 
 export function Pad({ children, style, className, ...rest }) {
   return (
@@ -82,40 +84,141 @@ export function ImageOrPlaceholder({ src, alt, label, objectFit = "cover" }) {
   );
 }
 
-/* ---- app-icon social boxes (iOS style: brand color fill, white glyph) ---- */
+/* ---- social link squares: light bg, brand-colored logo ---- */
 
 const BRANDS = {
-  github: { Icon: GitHubIcon, bg: "#1d1d1f" },
-  linkedin: { Icon: LinkedInIcon, bg: "#0a66c2" },
-  instagram: {
-    Icon: InstagramIcon,
-    bg: "radial-gradient(circle at 30% 110%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285AEB 90%)",
-  },
-  telegram: { Icon: TelegramIcon, bg: "#229ED9" },
+  github: { Icon: GitHubIcon, color: "#1d1d1f" },
+  linkedin: { Icon: LinkedInIcon, color: "#0a66c2" },
+  whatsapp: { Icon: WhatsAppIcon, color: "#25D366" },
+  gmail: { Icon: GmailIcon, color: "#EA4335" },
 };
 
-export function AppIconBox({ name, url }) {
-  const { Icon, bg } = BRANDS[name] || BRANDS.github;
+const SOCIAL_LINKS = [
+  { name: "github", url: profile.socials.github },
+  { name: "linkedin", url: profile.socials.linkedin },
+  { name: "whatsapp", url: profile.socials.whatsapp },
+  { name: "gmail", url: profile.socials.gmail },
+];
+
+const SOCIAL_SIZE = "clamp(44px, 5.2vw, 58px)";
+
+export function SocialStrip({ justify = "flex-start", pad = true }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: "8px",
+        height: "100%",
+        alignItems: "center",
+        justifyContent: justify,
+        padding: pad ? "0 2px" : 0,
+        minWidth: 0,
+        background: "transparent",
+      }}
+    >
+      {SOCIAL_LINKS.map(({ name, url }) => (
+        <div
+          key={name}
+          style={{
+            width: SOCIAL_SIZE,
+            height: SOCIAL_SIZE,
+            flexShrink: 0,
+            borderRadius: "14px",
+            overflow: "hidden",
+          }}
+        >
+          <AppIconBox name={name} url={url} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function AppIconBox({ name, url, bare = false }) {
+  const { Icon, color } = BRANDS[name] || BRANDS.github;
+  const [hover, setHover] = useState(false);
+
+  if (!bare) {
+    return (
+      <motion.a
+        href={url}
+        target="_blank"
+        rel="noreferrer"
+        title={name}
+        whileHover={{ scale: 1.06, y: -2 }}
+        whileTap={{ scale: 0.96 }}
+        transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#fff",
+          border: "1px solid var(--line)",
+          color,
+          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.04)",
+        }}
+      >
+        <Icon size="44%" />
+      </motion.a>
+    );
+  }
+
   return (
     <motion.a
       href={url}
       target="_blank"
       rel="noreferrer"
       title={name}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.25, ease: [0.32, 0.72, 0, 1] }}
+      onHoverStart={() => setHover(true)}
+      onHoverEnd={() => setHover(false)}
+      onFocus={() => setHover(true)}
+      onBlur={() => setHover(false)}
+      whileTap={{ scale: 0.94 }}
+      transition={{ duration: 0.2, ease: [0.32, 0.72, 0, 1] }}
       style={{
+        position: "relative",
+        overflow: "hidden",
         width: "100%",
         height: "100%",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: bg,
-        color: "#fff",
+        background: "transparent",
+        color: hover ? "#fff" : color,
       }}
     >
-      <Icon size="46%" />
+      {/* brand color blooms from center dot to fill the whole cell */}
+      <motion.span
+        aria-hidden
+        initial={false}
+        animate={{
+          scale: hover ? 4.2 : 0.2,
+          opacity: hover ? 1 : 0.12,
+        }}
+        transition={{ duration: 0.42, ease: [0.32, 0.72, 0, 1] }}
+        style={{
+          position: "absolute",
+          width: 44,
+          height: 44,
+          borderRadius: "50%",
+          background: color,
+          left: "50%",
+          top: "50%",
+          x: "-50%",
+          y: "-50%",
+          pointerEvents: "none",
+        }}
+      />
+      <motion.span
+        initial={false}
+        animate={{ scale: hover ? 1.12 : 1, y: hover ? -1 : 0 }}
+        transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+        style={{ position: "relative", zIndex: 1, display: "flex", color: "inherit" }}
+      >
+        <Icon size={30} />
+      </motion.span>
     </motion.a>
   );
 }
@@ -226,69 +329,135 @@ export function BrowserMockup({ src, alt }) {
   );
 }
 
-/* iPhone 11 (414x896) or Android: same size, screenshot fills the screen. */
-export function PhoneMockup({ kind = "iphone", src, alt }) {
+/* Realistic phone frames: iPhone (notch) + Android (punch-hole). */
+export function PhoneMockup({ kind = "iphone", src, alt, width }) {
   const iphone = kind === "iphone";
-  const w = "clamp(64px, 7.5vw, 104px)";
+  const w = width || "clamp(78px, 9vw, 128px)";
 
   return (
     <div
       style={{
         width: w,
-        aspectRatio: "414 / 896",
-        borderRadius: iphone ? "16%" : "13%",
-        border: "3px solid #1d1d1f",
-        background: "#1d1d1f",
+        aspectRatio: iphone ? "390 / 844" : "360 / 780",
+        borderRadius: iphone ? "22px" : "20px",
+        background: iphone
+          ? "linear-gradient(160deg, #3a3a3c 0%, #1c1c1e 45%, #0a0a0a 100%)"
+          : "linear-gradient(160deg, #2c2c2e 0%, #1a1a1c 50%, #111 100%)",
+        padding: iphone ? "7px" : "6px",
         position: "relative",
-        overflow: "hidden",
-        boxShadow: "0 10px 24px rgba(0, 0, 0, 0.2)",
         flexShrink: 0,
+        boxShadow:
+          "0 14px 28px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.18)",
       }}
     >
+      {/* side buttons */}
+      {iphone && (
+        <>
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: -2,
+              top: "18%",
+              width: 2,
+              height: "6%",
+              borderRadius: 2,
+              background: "#2a2a2c",
+            }}
+          />
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              left: -2,
+              top: "28%",
+              width: 2,
+              height: "10%",
+              borderRadius: 2,
+              background: "#2a2a2c",
+            }}
+          />
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              right: -2,
+              top: "30%",
+              width: 2,
+              height: "12%",
+              borderRadius: 2,
+              background: "#2a2a2c",
+            }}
+          />
+        </>
+      )}
+
       <div
         style={{
-          position: "absolute",
-          inset: "2.5px",
-          borderRadius: iphone ? "13.5%" : "10.5%",
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          borderRadius: iphone ? "16px" : "15px",
           overflow: "hidden",
-          background: "#fff",
+          background: "#f5f5f7",
         }}
       >
         <ImageOrPlaceholder src={src} alt={alt} label="" objectFit="cover" />
+
+        {iphone ? (
+          /* classic notch */
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "38%",
+              height: "4.6%",
+              minHeight: 12,
+              background: "#0a0a0a",
+              borderBottomLeftRadius: 12,
+              borderBottomRightRadius: 12,
+              zIndex: 3,
+              boxShadow: "inset 0 -1px 0 rgba(255,255,255,0.06)",
+            }}
+          />
+        ) : (
+          /* Android punch-hole camera */
+          <span
+            aria-hidden
+            style={{
+              position: "absolute",
+              top: "1.6%",
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: "radial-gradient(circle at 35% 35%, #3a3a40, #0a0a0a 70%)",
+              zIndex: 3,
+              boxShadow: "0 0 0 1.5px #111",
+            }}
+          />
+        )}
+
+        {/* home indicator */}
+        <span
+          aria-hidden
+          style={{
+            position: "absolute",
+            bottom: "1.4%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: iphone ? "34%" : "28%",
+            height: 3,
+            borderRadius: 999,
+            background: "rgba(0,0,0,0.28)",
+            zIndex: 3,
+          }}
+        />
       </div>
-      {iphone ? (
-        <span
-          style={{
-            position: "absolute",
-            top: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "44%",
-            height: "3.8%",
-            minHeight: "10px",
-            background: "#1d1d1f",
-            borderBottomLeftRadius: "12px",
-            borderBottomRightRadius: "12px",
-            zIndex: 2,
-          }}
-        />
-      ) : (
-        <span
-          style={{
-            position: "absolute",
-            top: "2.2%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: "3.8%",
-            minWidth: "7px",
-            aspectRatio: "1",
-            borderRadius: "50%",
-            background: "#1d1d1f",
-            zIndex: 2,
-            boxShadow: "0 0 0 2px #0a0a0a",
-          }}
-        />
-      )}
     </div>
   );
 }

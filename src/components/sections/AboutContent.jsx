@@ -1,8 +1,9 @@
 import profile from "../../data/profile.json";
 import images from "../../data/images.json";
 import { Pad, Label, ImageOrPlaceholder } from "../ui.jsx";
+import { useIsMobile } from "../../hooks.js";
 
-/* ==text== renders as a yellow marker sweep, __text__ as a hand-drawn pen line */
+/* ==text== yellow marker, __text__ hand-drawn pen underline */
 function Highlight({ text }) {
   return text.split(/(==[^=]+==|__[^_]+__)/g).map((part, i) => {
     if (part.startsWith("==") && part.endsWith("==")) {
@@ -23,9 +24,66 @@ function Highlight({ text }) {
   });
 }
 
-/* B: heading strip. Title centered left, subtitle top right, stat chips bottom right. */
+/* B: heading strip. Compact on mobile, roomy on desktop. */
 export function B() {
-  const pad = "clamp(14px, 2vw, 26px)";
+  const isMobile = useIsMobile();
+  const pad = isMobile ? "12px 14px" : "clamp(14px, 2vw, 26px)";
+  const stats = isMobile ? profile.stats.slice(0, 2) : profile.stats;
+
+  if (isMobile) {
+    return (
+      <div
+        style={{
+          height: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "10px",
+          padding: pad,
+          minHeight: 0,
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "1.35rem",
+            fontWeight: 700,
+            letterSpacing: "-0.03em",
+            flexShrink: 0,
+          }}
+        >
+          About<span style={{ color: "var(--accent)" }}>.</span>
+        </h2>
+        <div
+          style={{
+            display: "flex",
+            gap: "6px",
+            flexWrap: "wrap",
+            justifyContent: "flex-end",
+            minWidth: 0,
+          }}
+        >
+          {stats.map((s) => (
+            <span
+              key={s.label}
+              style={{
+                padding: "5px 9px",
+                borderRadius: "8px",
+                background: "var(--panel-2)",
+                border: "1px solid var(--line)",
+                color: "var(--muted)",
+                fontSize: "0.62rem",
+                fontWeight: 550,
+                whiteSpace: "nowrap",
+              }}
+            >
+              <span style={{ color: "var(--text)", fontWeight: 650 }}>{s.value}</span>{" "}
+              {s.label.split(" ")[0]}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ height: "100%", position: "relative", minHeight: 0 }}>
@@ -101,82 +159,119 @@ export function A() {
   );
 }
 
-/* C: the story with clear hierarchy. Lead, body, then what sets me apart. */
+/* C: personality story */
 export function C() {
+  const isMobile = useIsMobile();
+  const sections = profile.aboutSections || [];
+  const mobileStats = profile.stats.slice(0, 2);
+
   return (
     <Pad
       className="thin-scroll"
-      style={{ overflowY: "auto", gap: "clamp(12px, 1.8vh, 20px)" }}
-      onWheel={(e) => {
-        const el = e.currentTarget;
-        if (el.scrollHeight > el.clientHeight) e.stopPropagation();
+      style={{
+        overflowY: "auto",
+        gap: isMobile ? "12px" : "clamp(12px, 1.8vh, 18px)",
+        justifyContent: "flex-start",
+        padding: isMobile ? "14px 16px" : "clamp(14px, 1.8vw, 22px)",
       }}
     >
-      <Label>Who I am</Label>
+      {isMobile ? (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "10px",
+          }}
+        >
+          <h2
+            style={{
+              fontSize: "1.4rem",
+              fontWeight: 700,
+              letterSpacing: "-0.03em",
+              flexShrink: 0,
+            }}
+          >
+            About<span style={{ color: "var(--accent)" }}>.</span>
+          </h2>
+          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+            {mobileStats.map((s) => (
+              <span
+                key={s.label}
+                style={{
+                  padding: "5px 9px",
+                  borderRadius: "8px",
+                  background: "var(--panel-2)",
+                  border: "1px solid var(--line)",
+                  color: "var(--muted)",
+                  fontSize: "0.62rem",
+                  fontWeight: 550,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span style={{ color: "var(--text)", fontWeight: 650 }}>{s.value}</span>{" "}
+                {s.label.split(" ")[0]}
+              </span>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <Label>Who I am</Label>
+      )}
 
       <p
         style={{
-          fontSize: "clamp(1.05rem, 1.6vw, 1.5rem)",
+          fontSize: isMobile ? "1.05rem" : "clamp(1.05rem, 1.55vw, 1.4rem)",
           lineHeight: 1.4,
           fontWeight: 650,
           letterSpacing: "-0.015em",
           color: "var(--text)",
-          maxWidth: "30ch",
+          maxWidth: isMobile ? "100%" : "34ch",
         }}
       >
-        {profile.aboutLead}
+        <Highlight text={profile.aboutLead} />
       </p>
 
-      {profile.about.map((p, i) => (
-        <p
-          key={i}
-          style={{
-            fontSize: "clamp(0.85rem, 1.05vw, 1rem)",
-            lineHeight: 1.65,
-            color: "#4a4a4f",
-            fontWeight: 450,
-            maxWidth: "58ch",
-          }}
-        >
-          {p}
-        </p>
-      ))}
-
-      <div style={{ marginTop: "clamp(2px, 0.6vh, 8px)" }}>
-        <Label style={{ display: "block", marginBottom: "10px" }}>
-          What sets me apart
-        </Label>
-        <div style={{ display: "flex", flexDirection: "column", gap: "9px" }}>
-          {profile.differentiators.map((d, i) => (
-            <div
-              key={i}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: isMobile ? "12px" : "clamp(12px, 1.6vh, 18px)",
+        }}
+      >
+        {sections.map((s) => (
+          <div key={s.label}>
+            <Label
               style={{
-                display: "flex",
-                alignItems: "baseline",
-                gap: "10px",
-                fontSize: "clamp(0.85rem, 1.05vw, 1rem)",
-                lineHeight: 1.6,
-                fontWeight: 500,
-                color: "var(--text)",
-                maxWidth: "58ch",
+                display: "block",
+                marginBottom: "5px",
+                fontSize: isMobile ? "0.55rem" : "0.58rem",
               }}
             >
-              <span style={{ color: "var(--accent)", flexShrink: 0, fontWeight: 700 }}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <span>
-                <Highlight text={d} />
-              </span>
-            </div>
-          ))}
-        </div>
+              {s.label}
+            </Label>
+            <p
+              style={{
+                fontSize: isMobile ? "0.88rem" : "clamp(0.84rem, 1.02vw, 0.96rem)",
+                lineHeight: 1.55,
+                color: "#4a4a4f",
+                fontWeight: 450,
+                maxWidth: isMobile ? "100%" : "52ch",
+              }}
+            >
+              <Highlight text={s.text} />
+            </p>
+          </div>
+        ))}
       </div>
     </Pad>
   );
 }
 
-/* E: experience, clean minimal panel */
+/* E: experience */
 export function E() {
+  const isMobile = useIsMobile();
+
   return (
     <Pad
       className="thin-scroll"
@@ -184,18 +279,15 @@ export function E() {
         overflowY: "auto",
         gap: "2px",
         background: "var(--panel-2)",
-      }}
-      onWheel={(e) => {
-        const el = e.currentTarget;
-        if (el.scrollHeight > el.clientHeight) e.stopPropagation();
+        padding: isMobile ? "12px 14px" : "clamp(14px, 1.8vw, 22px)",
       }}
     >
-      <Label style={{ marginBottom: "12px" }}>Experience</Label>
+      <Label style={{ marginBottom: isMobile ? "8px" : "12px" }}>Experience</Label>
       {profile.experience.map((e, i) => (
         <div
           key={e.role}
           style={{
-            padding: "14px 0",
+            padding: isMobile ? "10px 0" : "14px 0",
             borderBottom:
               i < profile.experience.length - 1 ? "1px solid var(--line)" : "none",
           }}
@@ -208,12 +300,18 @@ export function E() {
               gap: "10px",
             }}
           >
-            <div style={{ fontWeight: 650, fontSize: "0.88rem", lineHeight: 1.35 }}>
+            <div
+              style={{
+                fontWeight: 650,
+                fontSize: isMobile ? "0.8rem" : "0.88rem",
+                lineHeight: 1.35,
+              }}
+            >
               {e.role}
             </div>
             <span
               style={{
-                fontSize: "0.66rem",
+                fontSize: "0.62rem",
                 fontWeight: 550,
                 color: "var(--muted)",
                 whiteSpace: "nowrap",
@@ -225,10 +323,10 @@ export function E() {
           </div>
           <div
             style={{
-              fontSize: "0.74rem",
+              fontSize: isMobile ? "0.7rem" : "0.74rem",
               color: "var(--muted)",
-              marginTop: "5px",
-              lineHeight: 1.45,
+              marginTop: "4px",
+              lineHeight: 1.4,
             }}
           >
             {e.org}

@@ -5,12 +5,12 @@
       "id": "suuq",
       "title": "Suuq",
       "tagline": "Somali marketplace · web, iOS & Android",
-      "description": "Full marketplace platform for the Somali market: listings, search, chat between buyers and sellers. Built solo end-to-end: web app, mobile apps (both stores), backend, database, CI/CD and DNS management.",
+      "description": "Full marketplace platform for the Somali market: listings, search, chat between buyers and sellers. Built end-to-end: web app, mobile apps (both stores), backend, database, CI/CD and DNS management.",
       "type": "production",
       "categories": ["Full Stack", "Mobile", "Web"],
       "tech": ["React", "React Native", "Node.js", "PostgreSQL", "CI/CD"],
       "year": "2026",
-      "role": "Solo engineer, everything",
+      "role": "Full-stack engineer",
       "links": {
         "web": null,
         "github": "https://github.com/natnaelesk/suuq-mobile-app",
@@ -19,15 +19,32 @@
       }
     },
     {
+      "id": "worldsomali-biz",
+      "title": "WorldSomali Biz",
+      "tagline": "Somali business directory · web & mobile",
+      "description": "Business directory for the Somali community: discover and list businesses across web and mobile. Built as a full product with listings, search and a clean browsing experience on both platforms.",
+      "type": "production",
+      "categories": ["Full Stack", "Mobile", "Web"],
+      "tech": ["React", "React Native", "Node.js", "PostgreSQL"],
+      "year": "2026",
+      "role": "Full-stack engineer",
+      "links": {
+        "web": "",
+        "github": null,
+        "appstore": "",
+        "playstore": ""
+      }
+    },
+    {
       "id": "globalbizdir",
       "title": "GlobalBizDir",
       "tagline": "Global business directory platform",
-      "description": "Business directory web platform built solo at MMI Technologies: full backend, database design, deployment pipeline and DNS management. Production system serving real businesses.",
+      "description": "Business directory web platform built at MMI Technologies: full backend, database design, deployment pipeline and DNS management. Production system serving real businesses.",
       "type": "production",
       "categories": ["Full Stack", "Web"],
       "tech": ["React", "Node.js", "PostgreSQL", "CI/CD"],
       "year": "2026",
-      "role": "Solo engineer, everything",
+      "role": "Full-stack engineer",
       "links": {
         "web": null,
         "github": "https://github.com/mmigithubacc/globalbizdir",
@@ -61,7 +78,7 @@
       "categories": ["Web", "Frontend"],
       "tech": ["React", "Supabase", "SEO", "Mail service"],
       "year": "2026",
-      "role": "Solo engineer",
+      "role": "Full-stack engineer",
       "links": {
         "web": "https://www.aguntaconstructionltd.com/",
         "github": null,

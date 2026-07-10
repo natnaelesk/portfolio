@@ -1,10 +1,11 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import * as Hero from "./sections/HeroContent.jsx";
 import * as About from "./sections/AboutContent.jsx";
 import * as Projects from "./sections/ProjectsContent.jsx";
 import * as Skills from "./sections/SkillsContent.jsx";
 import * as Contact from "./sections/ContactContent.jsx";
 import { useIsMobile } from "../hooks.js";
+import { BENTO_SPRING, CONTENT_TRANSITION, EASE } from "../motion.js";
 
 /*
  * Eight persistent boxes (A-H) morph between sections: same DOM nodes,
@@ -15,26 +16,24 @@ import { useIsMobile } from "../hooks.js";
  * null = box hidden in that section.
  */
 
-// social link boxes: stretch equally across the row width
-const ICON = {
-  width: "100%",
-  height: "100%",
-  maxHeight: "84px",
+// bottom-row bento cells: stretch to fill the grid row evenly
+const FOOTER = {
+  alignSelf: "stretch",
   minWidth: 0,
-  alignSelf: "center",
-  justifySelf: "stretch",
+  minHeight: 0,
 };
 
 const LAYOUTS = [
   // 0 Hero
+  // intro 8 cols, portrait 4 cols; 4 equal social boxes under intro, available under portrait
   {
-    B: [1, 8, 1, 8], // big intro
-    A: [8, 13, 1, 8], // portrait
-    D: { place: [9, 13, 8, 9], style: { maxHeight: "110px", alignSelf: "center" } }, // availability
-    F: { place: [1, 3, 8, 9], style: ICON }, // GitHub
-    G: { place: [3, 5, 8, 9], style: ICON }, // LinkedIn
-    H: { place: [5, 7, 8, 9], style: ICON }, // Instagram
-    E: { place: [7, 9, 8, 9], style: ICON }, // Telegram
+    B: [1, 9, 1, 8], // big intro
+    A: [9, 13, 1, 8], // portrait
+    F: { place: [1, 3, 8, 9], style: FOOTER }, // GitHub  (equal 2-col)
+    G: { place: [3, 5, 8, 9], style: FOOTER }, // LinkedIn (equal 2-col)
+    H: { place: [5, 7, 8, 9], style: FOOTER }, // WhatsApp (equal 2-col)
+    E: { place: [7, 9, 8, 9], style: FOOTER }, // Gmail    (equal 2-col)
+    D: { place: [9, 13, 8, 9], style: FOOTER }, // available = portrait width
     C: null,
   },
   // 1 About
@@ -48,16 +47,26 @@ const LAYOUTS = [
     G: null,
     H: null,
   },
-  // 2 Projects
+  // 2 Projects: title bar, 7 equal stack boxes, carousel
   {
-    B: [1, 4, 1, 3], // heading
-    D: [4, 7, 1, 2], // filter: all
-    F: [7, 10, 1, 2], // filter: personal
-    G: [10, 13, 1, 2], // filter: production
-    H: [4, 13, 2, 3], // stack chips
-    C: [1, 13, 3, 9], // carousel wrapper
+    B: [1, 13, 1, 2],
+    H: {
+      place: [1, 13, 2, 3],
+      style: {
+        background: "transparent",
+        border: "none",
+        boxShadow: "none",
+        backdropFilter: "none",
+        WebkitBackdropFilter: "none",
+        overflow: "visible",
+      },
+    },
+    C: [1, 13, 3, 9],
     A: null,
+    D: null,
     E: null,
+    F: null,
+    G: null,
   },
   // 3 Skills & Services
   {
@@ -75,31 +84,33 @@ const LAYOUTS = [
     B: [1, 9, 1, 6], // big CTA
     A: [9, 13, 1, 9], // form
     C: [1, 9, 6, 7], // email strip
-    F: { place: [1, 3, 7, 9], style: ICON }, // GitHub
-    G: { place: [3, 5, 7, 9], style: ICON }, // LinkedIn
-    H: { place: [5, 7, 7, 9], style: ICON }, // Instagram
-    D: { place: [7, 9, 7, 9], style: ICON }, // Telegram
-    E: null,
+    F: { place: [1, 3, 7, 9], style: FOOTER }, // GitHub
+    G: { place: [3, 5, 7, 9], style: FOOTER }, // LinkedIn
+    H: { place: [5, 7, 7, 9], style: FOOTER }, // WhatsApp
+    E: { place: [7, 9, 7, 9], style: FOOTER }, // Gmail
+    D: null,
   },
 ];
 
 // Single-column flow for phones: full-width rows, natural order.
 const LAYOUTS_MOBILE = [
-  // 0 Hero
+  // 0 Hero: image top-left, vertical socials on the right, details below.
+  // Available is a chip on the image (D hidden).
   {
-    B: [1, 13, 1, 5],
-    A: [1, 13, 5, 7],
-    D: { place: [1, 13, 7, 8], style: { maxHeight: "84px", alignSelf: "center" } },
-    F: { place: [1, 4, 8, 9], style: ICON },
-    G: { place: [4, 7, 8, 9], style: ICON },
-    H: { place: [7, 10, 8, 9], style: ICON },
-    E: { place: [10, 13, 8, 9], style: ICON },
+    A: [1, 10, 1, 5], // portrait
+    F: { place: [10, 13, 1, 2], style: FOOTER }, // GitHub
+    G: { place: [10, 13, 2, 3], style: FOOTER }, // LinkedIn
+    H: { place: [10, 13, 3, 4], style: FOOTER }, // WhatsApp
+    E: { place: [10, 13, 4, 5], style: FOOTER }, // Gmail
+    B: [1, 13, 5, 9], // intro details, full width
+    D: null,
     C: null,
   },
-  // 1 About
+  // 1 About: story fills most of the screen, short experience below
+  // Title lives inside the story card on mobile (B hidden)
   {
-    B: [1, 13, 1, 3],
-    C: [1, 13, 3, 7],
+    B: null,
+    C: [1, 13, 1, 7],
     E: [1, 13, 7, 9],
     A: null,
     D: null,
@@ -107,43 +118,61 @@ const LAYOUTS_MOBILE = [
     G: null,
     H: null,
   },
-  // 2 Projects
+  // 2 Projects: title, stack filters, vertical list
   {
     B: [1, 13, 1, 2],
-    D: [1, 5, 2, 3],
-    F: [5, 9, 2, 3],
-    G: [9, 13, 2, 3],
-    H: [1, 13, 3, 4],
-    C: [1, 13, 4, 9],
+    H: [1, 13, 2, 3],
+    C: [1, 13, 3, 9],
     A: null,
+    D: null,
     E: null,
+    F: null,
+    G: null,
   },
-  // 3 Skills & Services
+  // 3 Skills: header + 2x2 skill grid + services
   {
     B: [1, 13, 1, 2],
-    C: [1, 7, 2, 4],
-    D: [7, 13, 2, 4],
-    F: [1, 7, 4, 6],
-    G: [7, 13, 4, 6],
-    E: [1, 13, 6, 9],
-    H: null,
+    C: [1, 7, 2, 5],
+    D: [7, 13, 2, 5],
+    F: [1, 7, 5, 7],
+    G: [7, 13, 5, 7],
+    E: [1, 13, 7, 9],
     A: null,
+    H: null,
   },
-  // 4 Contact
+  // 4 Contact: intro, form, social footer
   {
     B: [1, 13, 1, 3],
-    C: [1, 13, 3, 4],
-    A: [1, 13, 4, 8],
-    F: { place: [1, 4, 8, 9], style: ICON },
-    G: { place: [4, 7, 8, 9], style: ICON },
-    H: { place: [7, 10, 8, 9], style: ICON },
-    D: { place: [10, 13, 8, 9], style: ICON },
-    E: null,
+    A: [1, 13, 3, 7],
+    F: { place: [1, 4, 7, 9], style: FOOTER },
+    G: { place: [4, 7, 7, 9], style: FOOTER },
+    H: { place: [7, 10, 7, 9], style: FOOTER },
+    E: { place: [10, 13, 7, 9], style: FOOTER },
+    C: null,
+    D: null,
   },
 ];
 
-// Softer, heavier spring = calmer, smoother morphs.
-const SPRING = { type: "spring", stiffness: 120, damping: 26, mass: 1 };
+// Softer spring — smooth morph without bounce or lag.
+const SPRING = BENTO_SPRING;
+
+/* Stack filter row (Projects H): container stays put, pills pop in with stagger. */
+function boxContentMotion(id, section) {
+  if (id === "H" && section === 2) {
+    return {
+      initial: { opacity: 1, y: 0 },
+      animate: { opacity: 1, y: 0 },
+      exit: { opacity: 0, transition: { duration: 0.14, ease: EASE } },
+      transition: { duration: 0.14 },
+    };
+  }
+  return {
+    initial: { opacity: 0, y: 8 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -4, transition: { duration: 0.14, ease: EASE } },
+    transition: CONTENT_TRANSITION,
+  };
+}
 
 function Box({ id, section, layouts, children }) {
   const entry = layouts[section][id];
@@ -157,7 +186,7 @@ function Box({ id, section, layouts, children }) {
       transition={SPRING}
       animate={{
         opacity: visible ? 1 : 0,
-        scale: visible ? 1 : 0.95,
+        scale: visible ? 1 : 0.97,
       }}
       style={{
         gridColumn: place ? `${place[0]} / ${place[1]}` : "1 / 2",
@@ -174,20 +203,20 @@ function Box({ id, section, layouts, children }) {
         zIndex: visible ? 1 : 0,
         minHeight: 0,
         minWidth: 0,
+        willChange: "transform, opacity",
         ...override,
       }}
     >
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={section}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
-          transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-          style={{ height: "100%", minHeight: 0 }}
-        >
-          {visible ? children : null}
-        </motion.div>
+      <AnimatePresence initial={false} mode="sync">
+        {visible && (
+          <motion.div
+            key={section}
+            {...boxContentMotion(id, section)}
+            style={{ height: "100%", minHeight: 0 }}
+          >
+            {children}
+          </motion.div>
+        )}
       </AnimatePresence>
     </motion.div>
   );
@@ -201,28 +230,30 @@ export default function BentoGrid({ section, goTo }) {
   const C = [Hero, About, Projects, Skills, Contact][section];
 
   return (
-    <div
-      style={{
-        height: "100%",
-        display: "grid",
-        gridTemplateColumns: "repeat(12, 1fr)",
-        gridTemplateRows: "repeat(8, 1fr)",
-        gap: isMobile ? "8px" : "12px",
-        padding: isMobile
-          ? "52px 12px 44px 12px"
-          : "clamp(54px, 7vh, 66px) clamp(38px, 4vw, 56px) clamp(16px, 3vh, 34px) clamp(14px, 2vw, 28px)",
-        position: "relative",
-        zIndex: 1,
-      }}
-    >
-      {BOX_IDS.map((id) => {
-        const Content = C[id];
-        return (
-          <Box key={id} id={id} section={section} layouts={layouts}>
-            {Content ? <Content goTo={goTo} /> : null}
-          </Box>
-        );
-      })}
-    </div>
+    <LayoutGroup id="bento">
+      <div
+        style={{
+          height: "100%",
+          display: "grid",
+          gridTemplateColumns: "repeat(12, 1fr)",
+          gridTemplateRows: "repeat(8, 1fr)",
+          gap: "var(--bento-gap)",
+          padding: isMobile
+            ? "44px 12px 48px 12px"
+            : "clamp(54px, 7vh, 66px) clamp(38px, 4vw, 56px) clamp(16px, 3vh, 34px) clamp(14px, 2vw, 28px)",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        {BOX_IDS.map((id) => {
+          const Content = C[id];
+          return (
+            <Box key={id} id={id} section={section} layouts={layouts}>
+              {Content ? <Content goTo={goTo} /> : null}
+            </Box>
+          );
+        })}
+      </div>
+    </LayoutGroup>
   );
 }

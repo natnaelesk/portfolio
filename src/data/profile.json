@@ -7,28 +7,42 @@
   "phone": "+251975086006",
   "available": true,
   "availabilityNote": "If you can see this, I'm open to opportunities. Send me a message.",
-  "intro": "I turn ideas into production-ready products: web, mobile, and AI-powered. Solo when needed, team player when it counts.",
-  "aboutLead": "I take products from first commit to production, across the whole stack, usually solo.",
-  "about": [
-    "I'm a full-stack engineer working as a mid-senior solo developer at MMI Technology Solutions, building everything clients ask for: web apps, mobile apps on both stores, backends, databases, CI/CD pipelines and DNS.",
-    "Self-taught at the core, CS degree from Ambo University with a 3.70 CGPA, 380+ LeetCode problems deep, and currently growing into AI engineering through RAG systems, LLM integrations and automation. Cursor Ambassador, organizing meetups and hackathons for the dev community."
+  "intro": "I turn ideas into production-ready products: web, mobile, and AI-powered. Happiest building with teams that share a big vision.",
+  "aboutLead": "I love ==building with people==. Big visions, sharp minds, and products that actually ship.",
+  "aboutSections": [
+    {
+      "label": "Background",
+      "text": "Self-taught builder. Moved to ==Addis Ababa== a couple of years ago and have been shipping from here ever since. Curious by default, always learning something new."
+    },
+    {
+      "label": "How I work",
+      "text": "I like ==teams and shared ownership==. I can cover the whole stack when needed, but I grow fastest next to people chasing the same vision. Clear, fast, and fun to work with."
+    },
+    {
+      "label": "What I love",
+      "text": "Making things people actually use. Lately that means ==AI tools==, automation, and a bit of DSA practice on the side. If it removes busywork or sparks a cool idea, I'm in."
+    },
+    {
+      "label": "Community",
+      "text": "As a ==Cursor Ambassador== I run meetups and hackathons. I love communities because that's where good people and big ideas meet."
+    }
   ],
   "differentiators": [
-    "One engineer, the ==whole stack==: frontend, backend, data, deploys, DNS and mail",
+    "One engineer, the ==whole stack==: frontend, backend, data, deploys and launch",
     "Apps built, shipped and ==live on both stores==, not just portfolio demos",
     "Every launch is SEO-optimized and __ranks first on Google__ for its name"
   ],
   "stats": [
     { "value": "10+", "label": "Production builds" },
-    { "value": "4+", "label": "Years with Python" },
     { "value": "380+", "label": "LeetCode solved" },
-    { "value": "2", "label": "Apps in both stores" }
+    { "value": "2", "label": "Apps in both stores" },
+    { "value": "1st", "label": "On Google search" }
   ],
   "socials": {
     "github": "https://github.com/natnaelesk",
     "linkedin": "https://www.linkedin.com/in/natnaelesk",
-    "instagram": "https://www.instagram.com/natnaelesk",
-    "telegram": "https://t.me/natnaelesk",
+    "whatsapp": "https://wa.me/251975086006",
+    "gmail": "mailto:natnaeleskinder41@gmail.com",
     "website": "https://natnaelesk.com"
   },
   "skills": [
