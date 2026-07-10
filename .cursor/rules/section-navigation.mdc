@@ -1,0 +1,34 @@
+---
+description: Global ArrowUp/Down section navigation — App-owned, blocks card scroll
+globs: src/App.jsx, src/useSectionNav.js, src/components/**/*.{jsx,js}, src/index.css
+alwaysApply: true
+---
+
+# Section Navigation
+
+## Source of truth
+
+- Section index and ArrowUp/Down handling live in `App.jsx` via `useSectionNav`.
+- Do not add local `keydown` handlers for ArrowUp/ArrowDown/PageUp/PageDown anywhere else.
+- Cursor position must not matter: keys work over any card, including scrollable ones.
+
+## Key behavior
+
+- ArrowDown / PageDown → next section.
+- ArrowUp / PageUp → previous section.
+- Handler: `window` capture phase, `preventDefault` + `stopPropagation` so the browser never scrolls a card.
+- Exception: focused `input` / `textarea` / `select` / `contentEditable` (caret / form use).
+- While `body.nav-paused` (e.g. project modal), do not change section; still block default ↑/↓ scroll.
+- Enforce nav lock for the morph duration so rapid keys cannot skip mid-animation.
+
+## Cards and scroll
+
+- Cards may scroll with wheel/touch only.
+- Never use ArrowUp/Down to scroll `.thin-scroll` / overflow areas.
+- Left/Right may still drive horizontal carousels (Projects); they must not steal ↑/↓.
+
+## Other nav
+
+- Section slider and in-content CTAs call `jumpTo` / `goTo` from the same App-owned state.
+- Wheel on the main canvas shows the “use arrow keys” hint; it does not change sections.
+---

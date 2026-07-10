@@ -5,7 +5,7 @@ import * as Projects from "./sections/ProjectsContent.jsx";
 import * as Skills from "./sections/SkillsContent.jsx";
 import * as Contact from "./sections/ContactContent.jsx";
 import { useIsMobile } from "../hooks.js";
-import { BENTO_SPRING, CONTENT_TRANSITION, EASE } from "../motion.js";
+import { BENTO_LAYOUT, CONTENT_TRANSITION, EASE } from "../motion.js";
 
 /*
  * Eight persistent boxes (A-H) morph between sections: same DOM nodes,
@@ -36,7 +36,7 @@ const LAYOUTS = [
     D: { place: [9, 13, 8, 9], style: FOOTER }, // available = portrait width
     C: null,
   },
-  // 1 About
+  // 1 About — B/A/C/E reshape from hero; socials + available hide
   {
     B: [1, 13, 1, 3], // heading strip + stat chips
     A: [1, 4, 3, 9], // portrait
@@ -47,7 +47,7 @@ const LAYOUTS = [
     G: null,
     H: null,
   },
-  // 2 Projects: title bar, 7 equal stack boxes, carousel
+  // 2 Projects — B + H + C carry the page; others hide
   {
     B: [1, 13, 1, 2],
     H: {
@@ -68,7 +68,7 @@ const LAYOUTS = [
     F: null,
     G: null,
   },
-  // 3 Skills & Services
+  // 3 Skills & Services — B/C/D/F/G/E/H reshape into skill grid
   {
     B: [1, 13, 1, 3], // heading strip
     C: [1, 4, 3, 6], // frontend
@@ -79,7 +79,7 @@ const LAYOUTS = [
     H: [8, 13, 6, 9], // how I ship
     A: null,
   },
-  // 4 Contact
+  // 4 Contact — B/A/C + socials reshape back toward hero-like footer
   {
     B: [1, 9, 1, 6], // big CTA
     A: [9, 13, 1, 9], // form
@@ -93,6 +93,7 @@ const LAYOUTS = [
 ];
 
 // Single-column flow for phones: full-width rows, natural order.
+// Same box IDs as desktop so morphs stay continuous.
 const LAYOUTS_MOBILE = [
   // 0 Hero: image top-left, vertical socials on the right, details below.
   // Available is a chip on the image (D hidden).
@@ -106,11 +107,10 @@ const LAYOUTS_MOBILE = [
     D: null,
     C: null,
   },
-  // 1 About: story fills most of the screen, short experience below
-  // Title lives inside the story card on mobile (B hidden)
+  // 1 About: B heading morphs from hero intro; C story; E experience
   {
-    B: null,
-    C: [1, 13, 1, 7],
+    B: [1, 13, 1, 2],
+    C: [1, 13, 2, 7],
     E: [1, 13, 7, 9],
     A: null,
     D: null,
@@ -129,47 +129,44 @@ const LAYOUTS_MOBILE = [
     F: null,
     G: null,
   },
-  // 3 Skills: header + 2x2 skill grid + services
+  // 3 Skills: compact header, equal 2x2 skill cells, taller services
   {
     B: [1, 13, 1, 2],
-    C: [1, 7, 2, 5],
-    D: [7, 13, 2, 5],
-    F: [1, 7, 5, 7],
-    G: [7, 13, 5, 7],
-    E: [1, 13, 7, 9],
+    C: [1, 7, 2, 4],
+    D: [7, 13, 2, 4],
+    F: [1, 7, 4, 6],
+    G: [7, 13, 4, 6],
+    E: [1, 13, 6, 9],
     A: null,
     H: null,
   },
-  // 4 Contact: intro, form, social footer
+  // 4 Contact: slim intro, roomy form, single-row social strip
   {
-    B: [1, 13, 1, 3],
-    A: [1, 13, 3, 7],
-    F: { place: [1, 4, 7, 9], style: FOOTER },
-    G: { place: [4, 7, 7, 9], style: FOOTER },
-    H: { place: [7, 10, 7, 9], style: FOOTER },
-    E: { place: [10, 13, 7, 9], style: FOOTER },
+    B: [1, 13, 1, 2],
+    A: [1, 13, 2, 8],
+    F: { place: [1, 4, 8, 9], style: FOOTER },
+    G: { place: [4, 7, 8, 9], style: FOOTER },
+    H: { place: [7, 10, 8, 9], style: FOOTER },
+    E: { place: [10, 13, 8, 9], style: FOOTER },
     C: null,
     D: null,
   },
 ];
 
-// Softer spring — smooth morph without bounce or lag.
-const SPRING = BENTO_SPRING;
-
-/* Stack filter row (Projects H): container stays put, pills pop in with stagger. */
+/* Projects: inner content owns slide intro (filters + cards). */
 function boxContentMotion(id, section) {
-  if (id === "H" && section === 2) {
+  if (section === 2 && (id === "B" || id === "H" || id === "C")) {
     return {
-      initial: { opacity: 1, y: 0 },
-      animate: { opacity: 1, y: 0 },
-      exit: { opacity: 0, transition: { duration: 0.14, ease: EASE } },
-      transition: { duration: 0.14 },
+      initial: { opacity: 1, x: 0, y: 0 },
+      animate: { opacity: 1, x: 0, y: 0 },
+      exit: { opacity: 0, transition: { duration: 0.18, ease: EASE } },
+      transition: { duration: 0.18, ease: EASE },
     };
   }
   return {
-    initial: { opacity: 0, y: 8 },
+    initial: { opacity: 0, y: 6 },
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -4, transition: { duration: 0.14, ease: EASE } },
+    exit: { opacity: 0, y: -4, transition: { duration: 0.16, ease: EASE } },
     transition: CONTENT_TRANSITION,
   };
 }
@@ -183,10 +180,10 @@ function Box({ id, section, layouts, children }) {
   return (
     <motion.div
       layout
-      transition={SPRING}
+      transition={BENTO_LAYOUT}
       animate={{
         opacity: visible ? 1 : 0,
-        scale: visible ? 1 : 0.97,
+        scale: visible ? 1 : 0.98,
       }}
       style={{
         gridColumn: place ? `${place[0]} / ${place[1]}` : "1 / 2",

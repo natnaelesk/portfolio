@@ -2,10 +2,10 @@
 import { motion } from "framer-motion";
 import profile from "../../data/profile.json";
 import { Pad, Label, AppIconBox } from "../ui.jsx";
-import { MailIcon, ArrowIcon, WhatsAppIcon } from "../icons.jsx";
+import { MailIcon, ArrowIcon } from "../icons.jsx";
 import { useIsMobile } from "../../hooks.js";
 
-/* B: intro CTA */
+/* B: intro CTA — mobile is a slim strip; desktop keeps the big CTA */
 export function B() {
   const isMobile = useIsMobile();
 
@@ -13,118 +13,62 @@ export function B() {
     return (
       <Pad
         style={{
+          flexDirection: "row",
+          alignItems: "center",
           justifyContent: "space-between",
           gap: "10px",
-          padding: "12px 14px",
+          padding: "10px 12px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-          <motion.span
-            animate={{ opacity: [1, 0.35, 1] }}
-            transition={{ duration: 2.2, repeat: Infinity }}
-            style={{
-              width: "8px",
-              height: "8px",
-              borderRadius: "50%",
-              background: "var(--green)",
-              boxShadow: "0 0 0 4px rgba(48,209,88,0.15)",
-              flexShrink: 0,
-            }}
-          />
-          <Label style={{ color: "var(--text)", fontSize: "0.62rem" }}>Open to work</Label>
-        </div>
-        <h2
-          style={{
-            fontSize: "1.3rem",
-            fontWeight: 700,
-            letterSpacing: "-0.035em",
-            lineHeight: 1.1,
-          }}
-        >
-          Let&rsquo;s build{" "}
-          <span style={{ color: "var(--muted)" }}>something real.</span>
-        </h2>
-        <p
-          style={{
-            fontSize: "0.78rem",
-            color: "var(--muted)",
-            lineHeight: 1.45,
-          }}
-        >
-          {profile.availabilityNote}
-        </p>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px" }}>
-          <a
-            href={`mailto:${profile.email}`}
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: "8px",
-              padding: "10px",
-              borderRadius: "12px",
-              background: "var(--panel-2)",
-              border: "1px solid var(--line)",
-              textDecoration: "none",
-              color: "inherit",
+              gap: "7px",
+              marginBottom: "4px",
             }}
           >
-            <span
+            <motion.span
+              animate={{ opacity: [1, 0.35, 1] }}
+              transition={{ duration: 2.2, repeat: Infinity }}
               style={{
-                width: 30,
-                height: 30,
-                borderRadius: 9,
-                background: "var(--accent-dim)",
-                color: "var(--accent)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                width: "7px",
+                height: "7px",
+                borderRadius: "50%",
+                background: "var(--green)",
+                boxShadow: "0 0 0 3px rgba(48,209,88,0.15)",
                 flexShrink: 0,
               }}
-            >
-              <MailIcon size={15} />
-            </span>
-            <div>
-              <div style={{ fontWeight: 650, fontSize: "0.76rem" }}>Email</div>
-              <div style={{ fontSize: "0.58rem", color: "var(--muted)" }}>Tap to write</div>
-            </div>
-          </a>
-          <a
-            href={profile.socials.whatsapp}
-            target="_blank"
-            rel="noreferrer"
+            />
+            <Label style={{ color: "var(--text)", fontSize: "0.58rem", letterSpacing: "0.1em" }}>
+              Open to work
+            </Label>
+          </div>
+          <h2
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              padding: "10px",
-              borderRadius: "12px",
-              background: "var(--panel-2)",
-              border: "1px solid var(--line)",
-              textDecoration: "none",
-              color: "inherit",
+              fontSize: "1.15rem",
+              fontWeight: 700,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.15,
             }}
           >
-            <span
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: 9,
-                background: "rgba(37, 211, 102, 0.14)",
-                color: "#25D366",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <WhatsAppIcon size={16} />
-            </span>
-            <div>
-              <div style={{ fontWeight: 650, fontSize: "0.76rem" }}>WhatsApp</div>
-              <div style={{ fontSize: "0.58rem", color: "var(--muted)" }}>Chat now</div>
-            </div>
-          </a>
+            Let&rsquo;s build{" "}
+            <span style={{ color: "var(--muted)" }}>something real.</span>
+          </h2>
         </div>
+        <a
+          href={`mailto:${profile.email}`}
+          className="btn-ghost"
+          style={{
+            flexShrink: 0,
+            padding: "8px 12px",
+            fontSize: "0.72rem",
+            borderRadius: "12px",
+          }}
+        >
+          Email
+        </a>
       </Pad>
     );
   }
@@ -195,30 +139,58 @@ function ContactForm() {
     background: "var(--panel-2)",
     border: "1px solid var(--line)",
     borderRadius: isMobile ? "12px" : "14px",
-    padding: isMobile ? "11px 12px" : "13px 16px",
-    fontSize: isMobile ? "0.84rem" : "0.88rem",
+    padding: isMobile ? "12px 13px" : "13px 16px",
+    fontSize: isMobile ? "0.88rem" : "0.88rem",
     width: "100%",
     color: "var(--text)",
   };
 
   return (
-    <Pad style={{ padding: isMobile ? "12px" : "clamp(14px, 2vw, 26px)" }}>
+    <Pad
+      style={{
+        padding: isMobile ? "12px" : "clamp(14px, 2vw, 26px)",
+      }}
+    >
       <form
         onSubmit={send}
         style={{
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          gap: isMobile ? "8px" : "12px",
+          gap: isMobile ? "10px" : "12px",
           minHeight: 0,
         }}
       >
-        <Label>Send a message</Label>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            gap: "8px",
+            flexShrink: 0,
+          }}
+        >
+          <Label>Send a message</Label>
+          {isMobile && (
+            <span
+              style={{
+                fontSize: "0.68rem",
+                color: "var(--muted)",
+                fontWeight: 450,
+                lineHeight: 1.3,
+                textAlign: "right",
+              }}
+            >
+              {profile.location}
+            </span>
+          )}
+        </div>
         <input
           style={field}
           placeholder="Your name"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          autoComplete="name"
         />
         <input
           style={field}
@@ -226,13 +198,14 @@ function ContactForm() {
           placeholder="Your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
         />
         <textarea
           style={{
             ...field,
             flex: 1,
             resize: "none",
-            minHeight: isMobile ? 0 : 0,
+            minHeight: isMobile ? "88px" : 0,
           }}
           placeholder="What are we building?"
           value={msg}
@@ -244,17 +217,17 @@ function ContactForm() {
           style={{
             width: "100%",
             justifyContent: "space-between",
-            fontSize: isMobile ? "0.86rem" : "0.92rem",
-            padding: isMobile ? "6px 6px 6px 16px" : undefined,
+            fontSize: isMobile ? "0.88rem" : "0.92rem",
+            padding: isMobile ? "7px 7px 7px 16px" : undefined,
             flexShrink: 0,
           }}
         >
           Send it
           <span
             className="btn-cta-arrow"
-            style={isMobile ? { width: 30, height: 30, borderRadius: 8 } : undefined}
+            style={isMobile ? { width: 32, height: 32, borderRadius: 9 } : undefined}
           >
-            {isMobile ? <ArrowIcon size={13} dir="up-right" /> : "↗"}
+            {isMobile ? <ArrowIcon size={14} dir="up-right" /> : "↗"}
           </span>
         </button>
       </form>

@@ -1,0 +1,38 @@
+---
+description: Global arrow-key section navigation — App-owned, never card-owned
+globs: src/**/*.{jsx,js}
+alwaysApply: true
+---
+
+# Portfolio Section Navigation
+
+## How users move
+
+- **Desktop:** ArrowUp / ArrowDown (also PageUp / PageDown). Wheel / touch show a hint only.
+- **Mobile (≤860px):** swipe / wheel advances sections — no keyboard required.
+- Secondary: section slider + in-content `goTo` / `jumpTo` buttons.
+- Nested card scroll still works with touch/wheel until the card hits its edge; then section nav takes over.
+
+## Ownership
+
+- Section index + ↑/↓ key handling live at **App root** (`App.jsx` + `useSectionNav`).
+- ❌ Do not attach ArrowUp/ArrowDown handlers inside section cards or scroll areas.
+- ❌ Do not let nested scroll containers consume ↑/↓ for scrolling.
+- ✅ Horizontal ←/→ may still drive the projects carousel only.
+
+## Arrow key contract
+
+When ↑/↓ (or PageUp/PageDown) is pressed anywhere on the site:
+
+1. `preventDefault` + `stopImmediatePropagation` in the **capture** phase.
+2. Advance / retreat one section — **cursor position does not matter**.
+3. Scrollable cards (`.thin-scroll`, `.no-scrollbar`) must **never** scroll from ↑/↓.
+4. Only exception: focused `INPUT` / `TEXTAREA` / `SELECT` / `contentEditable` (caret / value editing).
+5. When `body.nav-paused` (e.g. project modal), skip section changes.
+
+## When editing cards
+
+- Wheel/touch may still scroll card interiors.
+- Never rely on default browser arrow-key scrolling inside panels.
+- Keep Escape-to-close (and similar) local; do not steal ↑/↓.
+---

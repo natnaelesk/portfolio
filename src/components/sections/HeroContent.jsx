@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+﻿import { motion } from "framer-motion";
 import profile from "../../data/profile.json";
 import images from "../../data/images.json";
 import { Pad, Label, ImageOrPlaceholder, AppIconBox } from "../ui.jsx";
@@ -39,11 +39,11 @@ export function B({ goTo }) {
         <p
           style={{
             marginTop: isMobile ? "10px" : "clamp(14px, 2vw, 28px)",
-            maxWidth: "50ch",
+            maxWidth: isMobile ? "50ch" : "58ch",
             fontSize: isMobile
-              ? "0.92rem"
-              : "clamp(0.95rem, 1.45vw, 1.32rem)",
-            lineHeight: 1.55,
+              ? "0.94rem"
+              : "clamp(1rem, 1.55vw, 1.42rem)",
+            lineHeight: 1.58,
             color: "var(--muted)",
             fontWeight: 450,
           }}

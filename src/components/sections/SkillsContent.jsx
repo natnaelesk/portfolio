@@ -15,12 +15,12 @@ export function B() {
         alignItems: "center",
         justifyContent: "space-between",
         gap: "10px",
-        padding: isMobile ? "10px 14px" : "clamp(14px, 1.8vw, 22px)",
+        padding: isMobile ? "10px 12px" : "clamp(14px, 1.8vw, 22px)",
       }}
     >
       <h2
         style={{
-          fontSize: isMobile ? "1.15rem" : "clamp(1.5rem, 2.6vw, 2.4rem)",
+          fontSize: isMobile ? "1.2rem" : "clamp(1.5rem, 2.6vw, 2.4rem)",
           fontWeight: 700,
           letterSpacing: "-0.03em",
           whiteSpace: "nowrap",
@@ -28,7 +28,15 @@ export function B() {
       >
         Skills<span style={{ color: "var(--accent)" }}>.</span>
       </h2>
-      <Label style={{ fontSize: isMobile ? "0.56rem" : undefined }}>
+      <Label
+        style={{
+          fontSize: isMobile ? "0.58rem" : undefined,
+          letterSpacing: isMobile ? "0.1em" : undefined,
+          textAlign: "right",
+          lineHeight: 1.3,
+          maxWidth: isMobile ? "42%" : undefined,
+        }}
+      >
         {isMobile ? "Stack & services" : "What I build with, and what I build for you"}
       </Label>
     </Pad>
@@ -42,20 +50,23 @@ function SkillChips({ items, compact = false }) {
         display: "flex",
         flexWrap: "wrap",
         gap: compact ? "5px" : "6px",
-        alignContent: compact ? "flex-start" : undefined,
-        flex: compact ? 1 : undefined,
+        alignContent: "flex-start",
+        flex: 1,
+        minHeight: 0,
       }}
     >
       {items.map((item) => (
         <span
           key={item}
           style={{
-            padding: compact ? "5px 9px" : "6px 12px",
+            padding: compact ? "5px 8px" : "6px 12px",
             borderRadius: "999px",
-            fontSize: compact ? "0.68rem" : "0.74rem",
+            fontSize: compact ? "0.7rem" : "0.74rem",
             fontWeight: 550,
+            lineHeight: 1.25,
             background: "var(--panel-2)",
             color: "var(--text)",
+            border: "1px solid var(--line)",
           }}
         >
           {item}
@@ -72,25 +83,38 @@ function SkillGroup({ index }) {
 
   return (
     <Pad
-      className={isMobile ? undefined : "thin-scroll"}
+      className="thin-scroll"
       style={{
-        overflowY: isMobile ? "hidden" : "auto",
-        gap: isMobile ? "8px" : "10px",
-        padding: isMobile ? "12px" : "clamp(14px, 1.6vw, 20px)",
+        overflowY: "auto",
+        gap: isMobile ? "7px" : "10px",
+        padding: isMobile ? "10px" : "clamp(14px, 1.6vw, 20px)",
         justifyContent: "flex-start",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "7px",
+          flexShrink: 0,
+        }}
+      >
         <span
           style={{
-            width: "8px",
-            height: "8px",
+            width: isMobile ? "7px" : "8px",
+            height: isMobile ? "7px" : "8px",
             borderRadius: "3px",
             background: TINTS[index % TINTS.length],
             flexShrink: 0,
           }}
         />
-        <Label style={{ color: "var(--text)", fontSize: isMobile ? "0.58rem" : undefined }}>
+        <Label
+          style={{
+            color: "var(--text)",
+            fontSize: isMobile ? "0.62rem" : undefined,
+            letterSpacing: isMobile ? "0.1em" : undefined,
+          }}
+        >
           {g.group}
         </Label>
       </div>
@@ -119,50 +143,57 @@ export function E() {
   return (
     <Pad
       style={{
-        gap: isMobile ? "6px" : "10px",
-        padding: isMobile ? "12px" : "clamp(14px, 1.6vw, 20px)",
+        gap: isMobile ? "8px" : "10px",
+        padding: isMobile ? "10px 12px" : "clamp(14px, 1.6vw, 20px)",
         justifyContent: "flex-start",
       }}
     >
-      <Label>Services</Label>
+      <Label style={{ fontSize: isMobile ? "0.62rem" : undefined }}>Services</Label>
       <div
         className={isMobile ? "thin-scroll" : undefined}
         style={{
           flex: 1,
           minHeight: 0,
           display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-          gap: isMobile ? "6px" : "10px",
+          gridTemplateColumns: "1fr 1fr",
+          gap: isMobile ? "7px" : "10px",
           overflowY: isMobile ? "auto" : "hidden",
-          alignContent: isMobile ? "stretch" : undefined,
+          alignContent: "stretch",
         }}
       >
         {profile.services.map((s) => (
           <div
             key={s.name}
             style={{
-              borderRadius: isMobile ? "11px" : "14px",
+              borderRadius: isMobile ? "12px" : "14px",
               background: "var(--panel-2)",
-              padding: isMobile ? "10px 12px" : "clamp(12px, 1.2vw, 16px)",
+              border: "1px solid var(--line)",
+              padding: isMobile ? "10px" : "clamp(12px, 1.2vw, 16px)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              gap: "3px",
+              gap: isMobile ? "4px" : "3px",
               minHeight: 0,
             }}
           >
             <div
               style={{
                 fontWeight: 650,
-                fontSize: isMobile ? "0.82rem" : "clamp(0.8rem, 1vw, 0.95rem)",
+                fontSize: isMobile
+                  ? "0.78rem"
+                  : "clamp(0.8rem, 1vw, 0.95rem)",
                 letterSpacing: "-0.01em",
+                lineHeight: 1.25,
+                color: "var(--text)",
               }}
             >
               {s.name}
             </div>
             <div
               style={{
-                fontSize: isMobile ? "0.72rem" : "clamp(0.68rem, 0.85vw, 0.78rem)",
+                fontSize: isMobile
+                  ? "0.68rem"
+                  : "clamp(0.68rem, 0.85vw, 0.78rem)",
                 color: "var(--muted)",
                 lineHeight: 1.4,
               }}

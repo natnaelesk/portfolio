@@ -1,0 +1,42 @@
+---
+description: Persistent bento-box morph UI across all portfolio sections
+globs: src/**/*.{jsx,js,css}
+alwaysApply: true
+---
+
+# Portfolio Bento UI
+
+All sections are one shared bento system — never separate page layouts.
+
+## Core model
+
+- Eight persistent boxes (`A`–`H`) live in `BentoGrid.jsx` as the same DOM nodes for every section.
+- Hero defines the initial set. Later sections only reshape, reposition, hide, or reveal those same boxes.
+- Changing section must: (1) fade old content out, (2) morph box geometry via Framer `layout`, (3) fade new content in.
+- `null` placement = hide that box for the section. Do not unmount the outer `Box` shell.
+
+## Section flow
+
+| From → To | Behavior |
+|-----------|----------|
+| Hero → About | Content fades; boxes reshape into about layout |
+| About → Projects | Unused boxes hide; remaining reshape into project containers |
+| Projects → Skills | Same morph / hide / reveal |
+| Skills → Contact | Same morph / hide / reveal |
+
+## Rules when editing
+
+- ❌ Do not add a new section as a standalone page, route, or fresh grid of cards.
+- ❌ Do not create one-off panels outside `Box` `A`–`H`.
+- ❌ Do not swap section UIs with hard cuts (opacity-only page swaps without layout morph).
+- ✅ Put section content in `sections/*Content.jsx` as named exports matching box IDs (`A`–`H`).
+- ✅ Update `LAYOUTS` / `LAYOUTS_MOBILE` in `BentoGrid.jsx` for placement only.
+- ✅ Prefer reusing a box that already exists in the previous section so the morph is visible.
+
+## Motion
+
+- Box morph and content fade use shared tokens in `motion.js`.
+- Use **ease-in-out** tweens (not soft slow springs) for layout morph — consistent in and out.
+- Keep morph duration snappy (~0.45–0.55s). Content crossfade slightly shorter.
+- Projects may own its own inner slide intro, but outer boxes still morph from the shared set.
+---

@@ -1,0 +1,42 @@
+---
+description: Portfolio bento morph UI — persistent boxes reshape across sections
+globs: src/components/**/*.{jsx,js}, src/motion.js
+alwaysApply: true
+---
+
+# Bento Morph UI
+
+All sections are one shared bento system. Never mount a separate page layout.
+
+## Persistent boxes
+
+- Eight boxes `A`–`H` live in `BentoGrid.jsx` as the same DOM nodes for every section.
+- Section files (`HeroContent`, `AboutContent`, …) only export content for box IDs they use.
+- `null` in `LAYOUTS` / `LAYOUTS_MOBILE` hides a box (opacity 0); do not unmount the box shell.
+- Changing section = new grid placement + content fade. Framer `layout` morphs size/position.
+
+## Transition contract
+
+1. Outgoing content fades out.
+2. Boxes reshape and reposition into the next section layout.
+3. Unused boxes hide; needed boxes appear from the shared set (never brand-new page chrome).
+4. Incoming content fades in after / with the morph.
+
+## Motion
+
+- Box morph: ease-in-out tween from `motion.js` (`BENTO_MORPH`) — not a slow spring.
+- Content: short ease-in-out fade (`CONTENT_TRANSITION`).
+- Keep in/out timing consistent; do not stack long staggered delays on section enter.
+
+## Layout rules
+
+- Desktop: 12×8 CSS grid. Placement: `[colStart, colEnd, rowStart, rowEnd]`.
+- Prefer reusing the same box IDs across adjacent sections so the eye tracks the morph (e.g. Hero `B` → About `B` → Projects `B`).
+- Do not replace the bento with cards-outside-grid, full-page scrolls, or per-section root layouts.
+- Glass panel look stays on the box shell unless a layout entry explicitly overrides style (e.g. Projects filter row).
+
+## Section content
+
+- One job per box. Export named `A`–`H` functions only.
+- Scroll inside a box with wheel/touch only (`.thin-scroll`). Never rely on ArrowUp/Down for card scroll.
+---

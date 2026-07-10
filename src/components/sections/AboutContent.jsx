@@ -159,11 +159,10 @@ export function A() {
   );
 }
 
-/* C: personality story */
+/* C: personality story — title lives in box B (shared morph), not duplicated here */
 export function C() {
   const isMobile = useIsMobile();
   const sections = profile.aboutSections || [];
-  const mobileStats = profile.stats.slice(0, 2);
 
   return (
     <Pad
@@ -175,49 +174,7 @@ export function C() {
         padding: isMobile ? "14px 16px" : "clamp(14px, 1.8vw, 22px)",
       }}
     >
-      {isMobile ? (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: "10px",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "1.4rem",
-              fontWeight: 700,
-              letterSpacing: "-0.03em",
-              flexShrink: 0,
-            }}
-          >
-            About<span style={{ color: "var(--accent)" }}>.</span>
-          </h2>
-          <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", justifyContent: "flex-end" }}>
-            {mobileStats.map((s) => (
-              <span
-                key={s.label}
-                style={{
-                  padding: "5px 9px",
-                  borderRadius: "8px",
-                  background: "var(--panel-2)",
-                  border: "1px solid var(--line)",
-                  color: "var(--muted)",
-                  fontSize: "0.62rem",
-                  fontWeight: 550,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                <span style={{ color: "var(--text)", fontWeight: 650 }}>{s.value}</span>{" "}
-                {s.label.split(" ")[0]}
-              </span>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <Label>Who I am</Label>
-      )}
+      <Label>Who I am</Label>
 
       <p
         style={{

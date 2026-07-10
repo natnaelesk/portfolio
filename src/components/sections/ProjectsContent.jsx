@@ -13,6 +13,7 @@ import {
 } from "../icons.jsx";
 import { useIsMobile } from "../../hooks.js";
 import { canScrollX } from "../../scrollBoundaries.js";
+import { EASE, SLIDE_SPRING } from "../../motion.js";
 
 /* ---- tiny shared store so the filter boxes (D/F/G/H) and the
    carousel (C): separate bento boxes: stay in sync ---- */
@@ -34,30 +35,58 @@ function useFilter() {
 
 const STACKS = ["Full Stack", "Web", "Mobile", "AI", "Backend", "Frontend", "Automation"];
 
-const STACK_EASE = [0.32, 0.72, 0, 1];
-
 const stackPillContainer = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.034,
-      delayChildren: 0.1,
+      staggerChildren: 0.04,
+      delayChildren: 0.18,
     },
   },
 };
 
 const stackPillItem = {
-  hidden: { opacity: 0, scale: 0.93, y: 6 },
+  hidden: { opacity: 0, x: 36 },
   show: {
     opacity: 1,
-    scale: 1,
-    y: 0,
+    x: 0,
     transition: {
-      opacity: { duration: 0.2, ease: STACK_EASE },
-      scale: { type: "spring", stiffness: 300, damping: 28 },
-      y: { type: "spring", stiffness: 280, damping: 30 },
+      opacity: { duration: 0.28, ease: EASE },
+      x: SLIDE_SPRING,
     },
   },
+};
+
+const projectsTitleMotion = {
+  hidden: { opacity: 0, x: 32 },
+  show: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      opacity: { duration: 0.28, ease: EASE },
+      x: { ...SLIDE_SPRING, delay: 0.12 },
+    },
+  },
+};
+
+const carouselTrackMotion = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { duration: 0.28, delay: 0.16 },
+  },
+};
+
+const projectCardVariants = {
+  hidden: (i) => ({ opacity: 0, x: -48 - i * 8 }),
+  show: (i) => ({
+    opacity: 1,
+    x: 0,
+    transition: {
+      opacity: { duration: 0.32, ease: EASE, delay: 0.2 + i * 0.045 },
+      x: { ...SLIDE_SPRING, delay: 0.2 + i * 0.045 },
+    },
+  }),
 };
 
 const TYPES = [
@@ -129,15 +158,21 @@ export function B() {
   const isMobile = useIsMobile();
 
   return (
-    <Pad
-      style={{
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: isMobile ? "8px" : "12px",
-        padding: isMobile ? "8px 12px" : "10px 18px",
-      }}
+    <motion.div
+      variants={projectsTitleMotion}
+      initial="hidden"
+      animate="show"
+      style={{ height: "100%", minHeight: 0 }}
     >
+      <Pad
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: isMobile ? "8px" : "12px",
+          padding: isMobile ? "8px 12px" : "10px 18px",
+        }}
+      >
       <div style={{ display: "flex", alignItems: "baseline", gap: "10px", minWidth: 0, flexShrink: 0 }}>
         <h2
           style={{
@@ -157,6 +192,7 @@ export function B() {
         <TypePills />
       </div>
     </Pad>
+    </motion.div>
   );
 }
 
@@ -685,8 +721,7 @@ function ProjectCard({ p, onSoon, onDetails, vertical = false }) {
   return (
     <article
       style={{
-        flexShrink: 0,
-        width: vertical ? "100%" : "min(78%, 880px)",
+        width: "100%",
         height: vertical ? "auto" : "100%",
         scrollSnapAlign: vertical ? "start" : "center",
         display: "flex",
@@ -806,7 +841,13 @@ export function C() {
   const [index, setIndex] = useState(0);
   const [soon, setSoon] = useState(false);
   const [detail, setDetail] = useState(null);
+  const [introDone, setIntroDone] = useState(false);
   const soonTimer = useRef(null);
+
+  useEffect(() => {
+    const t = setTimeout(() => setIntroDone(true), 720);
+    return () => clearTimeout(t);
+  }, []);
 
   const projects = data.projects.filter((p) => {
     if (f.type !== "all" && p.type !== f.type) return false;
@@ -828,12 +869,19 @@ export function C() {
     el.scrollBy({ left: dir * step, behavior: "smooth" });
   };
 
+  // ←/→ only — ↑/↓ are owned by App section nav and must never scroll cards.
   useEffect(() => {
     if (isMobile) return undefined;
     const onKey = (e) => {
       if (detail) return;
-      if (e.key === "ArrowRight") jump(1);
-      if (e.key === "ArrowLeft") jump(-1);
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        jump(1);
+      }
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        jump(-1);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -872,8 +920,11 @@ export function C() {
 
   return (
     <div style={{ height: "100%", position: "relative", display: "flex", flexDirection: "column" }}>
-      <div
+      <motion.div
         ref={trackRef}
+        variants={carouselTrackMotion}
+        initial="hidden"
+        animate="show"
         className={isMobile ? "thin-scroll" : "no-scrollbar"}
         onScroll={onScroll}
         style={{
@@ -889,14 +940,27 @@ export function C() {
           scrollBehavior: "smooth",
         }}
       >
-        {projects.map((p) => (
-          <ProjectCard
+        {projects.map((p, i) => (
+          <motion.div
             key={p.id}
-            p={p}
-            onSoon={showSoon}
-            onDetails={setDetail}
-            vertical={isMobile}
-          />
+            custom={i}
+            variants={projectCardVariants}
+            initial={introDone ? false : "hidden"}
+            animate="show"
+            style={{
+              flexShrink: 0,
+              width: isMobile ? "100%" : "min(78%, 880px)",
+              height: isMobile ? "auto" : "100%",
+              scrollSnapAlign: isMobile ? "start" : "center",
+            }}
+          >
+            <ProjectCard
+              p={p}
+              onSoon={showSoon}
+              onDetails={setDetail}
+              vertical={isMobile}
+            />
+          </motion.div>
         ))}
         {projects.length === 0 && (
           <div
@@ -910,7 +974,7 @@ export function C() {
             Nothing matches this filter yet.
           </div>
         )}
-      </div>
+      </motion.div>
 
       {!isMobile &&
         [-1, 1].map((dir) => (
