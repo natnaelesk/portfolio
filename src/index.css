@@ -382,6 +382,10 @@ a {
   text-decoration: none;
 }
 
+[data-scroll-trap] {
+  overscroll-behavior: none;
+}
+
 /* ---- first-visit navigation hint ---- */
 .nav-hint {
   position: fixed;

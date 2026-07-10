@@ -453,14 +453,17 @@ function ProjectDetailModal({ p, onClose, onSoon }) {
     };
     window.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    document.body.classList.add("nav-paused");
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      document.body.classList.remove("nav-paused");
     };
   }, [onClose]);
 
   return createPortal(
     <motion.div
+      data-scroll-trap
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -490,6 +493,7 @@ function ProjectDetailModal({ p, onClose, onSoon }) {
           height: isMobile ? "100%" : "auto",
           maxHeight: isMobile ? "100%" : "min(94vh, 940px)",
           overflowY: "auto",
+          overscrollBehavior: "contain",
           background: "#fff",
           border: isMobile ? "none" : "1px solid var(--line)",
           borderRadius: isMobile ? 0 : "24px",

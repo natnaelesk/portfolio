@@ -5,6 +5,7 @@ import {
   WHEEL_THRESHOLD,
 } from "./motion.js";
 import {
+  isNavPaused,
   touchConsumedByScrollArea,
   wheelConsumedByScrollArea,
 } from "./scrollBoundaries.js";
@@ -70,7 +71,7 @@ export function useSectionNav(sectionCount) {
 
   useEffect(() => {
     const onWheel = (e) => {
-      if (navLocked.current) return;
+      if (isNavPaused() || navLocked.current) return;
       if (wheelConsumedByScrollArea(e.target, e.deltaX, e.deltaY)) return;
 
       wheelAccum.current += e.deltaY;
@@ -87,6 +88,7 @@ export function useSectionNav(sectionCount) {
     };
 
     const onKey = (e) => {
+      if (isNavPaused()) return;
       if (e.repeat) return;
       if (["ArrowDown", "PageDown"].includes(e.key)) {
         e.preventDefault();
@@ -109,7 +111,7 @@ export function useSectionNav(sectionCount) {
     };
 
     const onTouchMove = (e) => {
-      if (touchStartY.current === null || navLocked.current) return;
+      if (isNavPaused() || touchStartY.current === null || navLocked.current) return;
       if (touchGestureUsed.current) return;
 
       const dy = touchStartY.current - e.touches[0].clientY;

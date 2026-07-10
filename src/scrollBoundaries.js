@@ -1,6 +1,15 @@
 export const SCROLLABLE_SELECTOR = ".thin-scroll, .no-scrollbar";
+export const SCROLL_TRAP_SELECTOR = "[data-scroll-trap]";
 
 const TOLERANCE = 2;
+
+export function isInsideScrollTrap(target) {
+  return !!(target instanceof Element && target.closest?.(SCROLL_TRAP_SELECTOR));
+}
+
+export function isNavPaused() {
+  return document.body.classList.contains("nav-paused");
+}
 
 export function canScrollY(el, deltaY) {
   if (!el || deltaY === 0) return false;
@@ -53,6 +62,8 @@ export function getScrollableChain(target) {
  * When false, section navigation should take over.
  */
 export function wheelConsumedByScrollArea(target, deltaX, deltaY) {
+  if (isInsideScrollTrap(target)) return true;
+
   const chain = getScrollableChain(target);
   const vertical = Math.abs(deltaY) >= Math.abs(deltaX);
 
@@ -71,6 +82,8 @@ export function wheelConsumedByScrollArea(target, deltaX, deltaY) {
 
 export function touchConsumedByScrollArea(target, deltaY) {
   if (deltaY === 0) return false;
+  if (isInsideScrollTrap(target)) return true;
+
   const chain = getScrollableChain(target);
   const dir = deltaY > 0 ? 1 : -1;
 
