@@ -7,8 +7,14 @@
   --color-accent: #facc15;
   --color-border: #333333;
 
+  /* Poster ground sampled from CARDINEL / LIMITYPE reference */
+  --color-hero-ground: #b7a79a;
+  --color-hero-ink: #151515;
+  --color-hero-meta: #141110;
+
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-display: "Archivo Black", "Arial Black", Impact, sans-serif;
 }
 
 * {
@@ -119,5 +125,128 @@ a:hover {
 .animate-flare-2 {
   animation: flareFloat2 20s ease-in-out infinite;
   animation-delay: 5s;
+}
+
+/* ── Limitype editorial hero ─────────────────────────────────────────
+   Poster energy: taupe field, tiny wide-tracked meta, massive compressed
+   name anchored near the bottom. Flat print finish — no glass, glow, or art.
+*/
+.limitype-hero {
+  --hero-pad-x: clamp(1rem, 3.5vw, 2.75rem);
+  --hero-pad-y: clamp(1rem, 2.2vw, 1.75rem);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100svh;
+  width: 100%;
+  padding: var(--hero-pad-y) var(--hero-pad-x);
+  background-color: var(--color-hero-ground);
+  color: var(--color-hero-ink);
+  overflow: hidden;
+}
+
+.limitype-hero__meta {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: clamp(0.625rem, 1.05vw, 0.75rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-hero-meta);
+  opacity: 0.72;
+  animation: limitypeMetaIn 0.7s ease-out both;
+}
+
+.limitype-hero__meta-left {
+  justify-self: start;
+}
+
+.limitype-hero__meta-center {
+  justify-self: center;
+  letter-spacing: 0.18em;
+}
+
+.limitype-hero__meta-right {
+  justify-self: end;
+}
+
+.limitype-hero__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: clamp(0.75rem, 2vw, 1.5rem);
+  width: 100%;
+  padding-bottom: clamp(0.25rem, 1.5vh, 1rem);
+}
+
+.limitype-hero__sub {
+  margin: 0;
+  max-width: 36rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.6875rem, 1.15vw, 0.8125rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  color: var(--color-hero-ink);
+  opacity: 0.78;
+  animation: limitypeSubIn 0.85s ease-out 0.12s both;
+}
+
+.limitype-hero__name {
+  margin: 0;
+  width: 100%;
+  font-family: var(--font-display);
+  font-weight: 400;
+  /* ~7 glyphs spanning nearly the full content width (1440 energy) */
+  font-size: clamp(3.5rem, 19.2vw, 18rem);
+  line-height: 0.82;
+  letter-spacing: -0.06em;
+  text-transform: uppercase;
+  color: var(--color-hero-ink);
+  white-space: nowrap;
+  text-align: left;
+  animation: limitypeNameIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+@keyframes limitypeMetaIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 0.72; transform: translateY(0); }
+}
+
+@keyframes limitypeSubIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 0.78; transform: translateY(0); }
+}
+
+@keyframes limitypeNameIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 420px) {
+  .limitype-hero__name {
+    /* Prefer one line via vw; allow wrap only on the narrowest viewports */
+    white-space: normal;
+    font-size: clamp(2.75rem, 22vw, 4.5rem);
+    letter-spacing: -0.045em;
+    word-break: break-word;
+  }
+
+  .limitype-hero__meta {
+    letter-spacing: 0.14em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .limitype-hero__meta,
+  .limitype-hero__sub,
+  .limitype-hero__name {
+    animation: none;
+  }
 }
 
